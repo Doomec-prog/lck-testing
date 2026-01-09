@@ -1,6 +1,3 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-
-export default defineConfig({
-  plugins: [react()],
-});
+// This file is deprecated and will be deleted by cleanup.js during build.
+// Keeping it empty prevents TS errors until deletion.
+export default {};
