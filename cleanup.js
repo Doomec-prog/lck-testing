@@ -7,7 +7,6 @@ const filesToDelete = [
   'index.html',
   'index.tsx',
   'App.tsx',
-  'api/chat.js',       // Replaced by app/api/chat/route.ts
   'types.ts',          // Replaced by types/index.ts
   'services/wpApi.ts', // Replaced by lib/wpApi.ts
   'constants/translations.ts', // Replaced by lib/translations.ts
@@ -51,3 +50,5 @@ foldersToDelete.forEach(folder => {
 });
 
 console.log('✨ Cleanup complete! Building Next.js app...');
+// NOTE: cleanup.js is no longer used in CI. It can be removed.
+
