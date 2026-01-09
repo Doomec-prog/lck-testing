@@ -5,9 +5,9 @@ import { ArrowRight, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { FadeIn } from './ui/FadeIn';
 import { SpotlightCard } from './ui/SpotlightCard';
-import { Language, NewsItem } from '../types';
-import { translations } from '../constants/translations';
-import { wpApi } from '../services/wpApi';
+import { Language, NewsItem } from '@/types';
+import { translations } from '@/lib/translations';
+import { wpApi } from '@/lib/wpApi';
 
 interface NewsProps {
   lang: Language;

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Лига Кинематографистов Казахстана (LCK)</title>
+    <meta name="description" content="Независимая общественная организация, целью которой является содействие развитию казахстанского кинематографа." />
+    
+    <!-- Tailwind CDN for Chat Preview (Development/Sandpack) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              display: ['Oswald', 'sans-serif'],
+            },
+            colors: {
+              gold: {
+                400: '#E5C158', // Light Champagne
+                500: '#D4AF37', // Classic Champagne Gold
+                600: '#AA8C2C', // Dark Antique Gold
+              },
+              cinema: {
+                900: '#121212',
+                950: '#050505', // Matte Black
+              },
+              paper: {
+                100: '#F0F0EE', // Warm, dense paper texture
+              }
+            },
+            animation: {
+              'marquee': 'marquee 120s linear infinite',
+              'blob': 'blob 15s infinite',
+              'grain': 'grain 4s steps(10) infinite',
+              'bounce-slow': 'bounce 4s infinite',
+              'breathing': 'breathing 6s ease-in-out infinite',
+            },
+            keyframes: {
+              marquee: {
+                '0%': { transform: 'translateX(0%)' },
+                '100%': { transform: 'translateX(-100%)' },
+              },
+              blob: {
+                '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                '33%': { transform: 'translate(30px, -50px) scale(1.05)' },
+                '66%': { transform: 'translate(-20px, 20px) scale(0.95)' },
+                '100%': { transform: 'translate(0px, 0px) scale(1)' },
+              },
+              grain: {
+                '0%, 100%': { transform: 'translate(0, 0)' },
+                '10%': { transform: 'translate(-2%, -2%)' },
+                '20%': { transform: 'translate(-4%, 2%)' },
+                '30%': { transform: 'translate(2%, -4%)' },
+                '40%': { transform: 'translate(-2%, 4%)' },
+                '50%': { transform: 'translate(-4%, 2%)' },
+                '60%': { transform: 'translate(4%, 0%)' },
+                '70%': { transform: 'translate(0%, 4%)' },
+                '80%': { transform: 'translate(2%, 6%)' },
+                '90%': { transform: 'translate(-4%, 2%)' },
+              },
+              breathing: {
+                '0%, 100%': { transform: 'scale(1)' },
+                '50%': { transform: 'scale(1.05)' },
+              }
+            }
+          },
+        },
+      }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Oswald:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+      /* Cinematic Scrollbar - Thinner & Darker */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #050505;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #333;
+        border-radius: 3px;
+        border: 1px solid #050505;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #D4AF37;
+      }
+
+      /* --- SEAMLESS TRANSITION MASKS (DISSOLVES) --- */
+      /* Fades out the bottom edge */
+      .mask-fade-b {
+        mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+        -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+      }
+      /* Fades out the top edge */
+      .mask-fade-t {
+        mask-image: linear-gradient(to top, black 80%, transparent 100%);
+        -webkit-mask-image: linear-gradient(to top, black 80%, transparent 100%);
+      }
+      /* Fades out both top and bottom edges (Vignette style) */
+      .mask-fade-y {
+        mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+        -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+      }
+      
+      /* --- VOLUMETRIC GLASS PHYSICS --- */
+      .glass-panel {
+        background: rgba(255, 255, 255, 0.65); 
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        border-bottom: 1px solid rgba(200, 200, 200, 0.2);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.03), inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
+      }
+      .dark .glass-panel {
+        background: rgba(15, 15, 15, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.05);
+      }
+      .glass-card {
+        background: linear-gradient(145deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.4) 100%);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.03); 
+      }
+      .dark .glass-card {
+        background: rgba(20, 20, 20, 0.6); 
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      }
+
+      .animation-delay-2000 { animation-delay: 2s; }
+      .animation-delay-4000 { animation-delay: 4s; }
+      .dot-bounce { animation: bounce 1.4s infinite ease-in-out both; }
+      .dot-bounce:nth-child(1) { animation-delay: -0.32s; }
+      .dot-bounce:nth-child(2) { animation-delay: -0.16s; }
+      
+      @media (min-width: 768px) {
+        body, a, button, input, textarea { cursor: none; }
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.2.0",
+    "react/jsx-runtime": "https://esm.sh/react@18.2.0/jsx-runtime",
+    "react-dom": "https://esm.sh/react-dom@18.2.0",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+    "react-router-dom": "https://esm.sh/react-router-dom@6.22.3?deps=react@18.2.0,react-dom@18.2.0",
+    "lucide-react": "https://esm.sh/lucide-react@0.344.0?deps=react@18.2.0",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "vite": "https://esm.sh/vite@^7.3.0",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "next/": "https://esm.sh/next@^16.1.1/",
+    "next": "https://esm.sh/next@^16.1.1"
+  }
+}
+</script>
+</head>
+  <body class="bg-paper-100 text-slate-800 dark:bg-cinema-950 dark:text-slate-200 transition-colors duration-700 overflow-x-hidden">
+    <div id="root"></div>
+    <script type="module" src="./index.tsx"></script>
+  </body>
+</html>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { FadeIn } from './ui/FadeIn';
-import { Language } from '../types';
-import { translations } from '../constants/translations';
+import { Language } from '@/types';
+import { translations } from '@/lib/translations';
 
 interface ProjectsStatsProps {
   lang: Language;

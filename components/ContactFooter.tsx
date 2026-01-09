@@ -1,8 +1,8 @@
 import React from 'react';
 import { Instagram, MessageCircle, MapPin, Mail, Send } from 'lucide-react';
 import { FadeIn } from './ui/FadeIn';
-import { Language } from '../types';
-import { translations } from '../constants/translations';
+import { Language } from '@/types';
+import { translations } from '@/lib/translations';
 
 interface ContactFooterProps {
   lang: Language;

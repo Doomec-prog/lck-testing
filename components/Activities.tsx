@@ -13,8 +13,8 @@ import {
 } from 'lucide-react';
 import { FadeIn } from './ui/FadeIn';
 import { SpotlightCard } from './ui/SpotlightCard';
-import { Language } from '../types';
-import { translations } from '../constants/translations';
+import { Language } from '@/types';
+import { translations } from '@/lib/translations';
 
 interface ActivitiesProps {
   lang: Language;

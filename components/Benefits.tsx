@@ -2,8 +2,8 @@ import React from 'react';
 import { Users, Briefcase, Award, BookOpen, ArrowRight } from 'lucide-react';
 import { FadeIn } from './ui/FadeIn';
 import { SpotlightCard } from './ui/SpotlightCard';
-import { Language } from '../types';
-import { translations } from '../constants/translations';
+import { Language } from '@/types';
+import { translations } from '@/lib/translations';
 
 interface BenefitsProps {
   lang: Language;
@@ -13,10 +13,10 @@ export const Benefits: React.FC<BenefitsProps> = ({ lang }) => {
   const t = translations[lang].benefits;
   
   const icons = [
-    <Users className="w-8 h-8 text-gold-500" />,
-    <Briefcase className="w-8 h-8 text-gold-500" />,
-    <Award className="w-8 h-8 text-gold-500" />,
-    <BookOpen className="w-8 h-8 text-gold-500" />
+    <Users key="users" className="w-8 h-8 text-gold-500" />,
+    <Briefcase key="briefcase" className="w-8 h-8 text-gold-500" />,
+    <Award key="award" className="w-8 h-8 text-gold-500" />,
+    <BookOpen key="book" className="w-8 h-8 text-gold-500" />
   ];
 
   const features = t.cards.map((card, index) => ({

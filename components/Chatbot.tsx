@@ -2,8 +2,8 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { X, Send, Loader2, Minimize2, Aperture, Film } from 'lucide-react';
-import { Language } from '../types';
-import { translations } from '../constants/translations';
+import { Language } from '@/types';
+import { translations } from '@/lib/translations';
 
 interface ChatbotProps {
   lang: Language;
