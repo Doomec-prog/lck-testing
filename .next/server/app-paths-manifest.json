@@ -1,7 +1,0 @@
-{
-  "/_not-found": "app/_not-found.js",
-  "/news/page": "app/news/page.js",
-  "/page": "app/page.js",
-  "/residents/page": "app/residents/page.js",
-  "/api/chat/route": "app/api/chat/route.js"
-}
