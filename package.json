@@ -4,10 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "node cleanup.js && next build",
+    "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "cleanup": "node cleanup.js"
+    "lint": "next lint"
   },
   "dependencies": {
     "@google/genai": "^1.30.0",
