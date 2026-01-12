@@ -2,20 +2,49 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Cinematic Scrollbar - Thinner & Darker */
+/* --- THEME VARIABLES --- */
+:root {
+  /* Default (Light) */
+  --color-gold-400: #E5C158;
+  --color-gold-500: #D4AF37;
+  --color-gold-600: #AA8C2C;
+  --color-cinema-900: #ffffff; /* In light mode cinema bg is white-ish usually, but we handle logic via dark class */
+  --color-cinema-950: #F0F0EE; /* Paper color for light bg */
+}
+
+/* Dark Mode (Original Gold/Black) */
+.dark {
+  --color-gold-400: #E5C158;
+  --color-gold-500: #D4AF37;
+  --color-gold-600: #AA8C2C;
+  --color-cinema-900: #121212;
+  --color-cinema-950: #050505;
+}
+
+/* Noir Mode (Black & White - Boss Request) */
+/* We apply .noir AND .dark together usually, but let's make .noir override colors */
+.noir {
+  --color-gold-400: #e5e5e5; /* Silver/White */
+  --color-gold-500: #ffffff; /* Pure White */
+  --color-gold-600: #a3a3a3; /* Grey */
+  --color-cinema-900: #0a0a0a;
+  --color-cinema-950: #000000; /* True Black */
+}
+
+/* Cinematic Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #050505;
+  background: var(--color-cinema-950);
 }
 ::-webkit-scrollbar-thumb {
   background: #333;
   border-radius: 3px;
-  border: 1px solid #050505;
+  border: 1px solid var(--color-cinema-950);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #D4AF37;
+  background: var(--color-gold-500);
 }
 
 /* --- SEAMLESS TRANSITION MASKS (DISSOLVES) --- */
@@ -60,6 +89,12 @@
   box-shadow: 0 4px 20px rgba(0,0,0,0.3);
 }
 
+/* Noir Specific Overrides for Glass */
+.noir .glass-panel, .noir .glass-card {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.8);
+}
+
 .animation-delay-2000 { animation-delay: 2s; }
 .animation-delay-4000 { animation-delay: 4s; }
 .dot-bounce { animation: bounce 1.4s infinite ease-in-out both; }
@@ -70,7 +105,6 @@
   body, a, button, input, textarea { cursor: none; }
 }
 
-/* Ensure smooth scrolling */
 html {
   scroll-behavior: smooth;
 }

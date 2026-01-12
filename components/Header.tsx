@@ -1,43 +1,48 @@
 'use client';
 
-import { useState, useEffect, Fragment } from 'react';
-import { Menu, X, Sun, Moon, LogIn } from 'lucide-react';
+import { useState, useEffect, Fragment, useRef } from 'react';
+import { Menu, X, Sun, Moon, LogIn, Monitor, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { NavItem, Language } from '@/types';
+import { NavItem, Language, Theme } from '@/types';
 import { translations } from '@/lib/translations';
 
 interface HeaderProps {
-  toggleTheme: () => void;
+  theme: Theme;
+  setTheme: (theme: Theme) => void;
   isDark: boolean;
   lang: Language;
   setLang: (lang: Language) => void;
 }
 
-export const Header = ({ toggleTheme, isDark, lang, setLang }: HeaderProps) => {
+export const Header = ({ theme, setTheme, isDark, lang, setLang }: HeaderProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
+  const themeMenuRef = useRef<HTMLDivElement>(null);
   
-  // Safe pathname retrieval
   let pathname = '/';
-  try {
-    pathname = usePathname() || '/';
-  } catch (e) {
-    // This allows the component to not crash if accidentally rendered outside Next.js context
-    console.warn('Header rendered outside Next.js Router Context');
-  }
+  try { pathname = usePathname() || '/'; } catch (e) { console.warn('Header rendered outside Next.js Context'); }
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
+    const handleScroll = () => { setIsScrolled(window.scrollY > 50); };
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    
+    const handleClickOutside = (event: MouseEvent) => {
+      if (themeMenuRef.current && !themeMenuRef.current.contains(event.target as Node)) {
+        setIsThemeMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, []);
 
   const t = translations[lang]?.nav || translations['RU'].nav;
 
-  // Define paths. If starting with #, it is a scroll link. Else route.
   const navItems: NavItem[] = [
     { label: t.about, href: '#about' },
     { label: t.news, href: '/news' },
@@ -50,8 +55,6 @@ export const Header = ({ toggleTheme, isDark, lang, setLang }: HeaderProps) => {
 
   const renderLink = (item: NavItem) => {
     const isAnchor = item.href.startsWith('#');
-    
-    // If it's an anchor, in Next.js we just link to /#id from other pages, or #id from home
     if (isAnchor) {
        return (
          <Link href={pathname === '/' ? item.href : `/${item.href}`} className="relative z-10" onClick={() => setIsMobileMenuOpen(false)}>
@@ -59,14 +62,20 @@ export const Header = ({ toggleTheme, isDark, lang, setLang }: HeaderProps) => {
          </Link>
        );
     }
-
-    // Standard route
     return (
        <Link href={item.href} className="relative z-10" onClick={() => setIsMobileMenuOpen(false)}>
          {item.label}
        </Link>
     );
   };
+
+  const themes: { id: Theme; label: string; icon: React.ReactNode }[] = [
+    { id: 'dark', label: 'Gold (Cinema)', icon: <Moon size={14} /> },
+    { id: 'light', label: 'Light (Paper)', icon: <Sun size={14} /> },
+    { id: 'noir', label: 'Noir (B&W)', icon: <Monitor size={14} /> },
+  ];
+
+  const currentThemeIcon = themes.find(t => t.id === theme)?.icon || <Moon size={14} />;
 
   return (
     <header className={`fixed top-4 left-0 w-full z-50 transition-all duration-500 flex justify-center pointer-events-none`}>
@@ -101,9 +110,35 @@ export const Header = ({ toggleTheme, isDark, lang, setLang }: HeaderProps) => {
                </button>
              ))}
           </div>
-          <button onClick={toggleTheme} type="button" className="cursor-pointer p-3 rounded-full glass-panel hover:text-gold-500 text-slate-700 dark:text-slate-300 transition-all hover:scale-105 active:scale-95">
-            {isDark ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
+          
+          {/* THEME SELECTOR DROPDOWN */}
+          <div className="relative" ref={themeMenuRef}>
+            <button 
+              onClick={() => setIsThemeMenuOpen(!isThemeMenuOpen)} 
+              type="button" 
+              className="cursor-pointer px-4 py-3 rounded-full glass-panel hover:text-gold-500 text-slate-700 dark:text-slate-300 transition-all hover:scale-105 active:scale-95 flex items-center space-x-2"
+            >
+              {currentThemeIcon}
+              <ChevronDown size={12} className={`transition-transform duration-300 ${isThemeMenuOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            {isThemeMenuOpen && (
+              <div className="absolute right-0 top-full mt-2 w-40 glass-panel rounded-2xl overflow-hidden shadow-2xl animate-fadeIn flex flex-col p-1">
+                {themes.map((t) => (
+                  <button
+                    key={t.id}
+                    onClick={() => { setTheme(t.id); setIsThemeMenuOpen(false); }}
+                    className={`flex items-center space-x-3 px-4 py-3 text-xs font-bold uppercase tracking-wider transition-colors rounded-xl
+                      ${theme === t.id ? 'bg-gold-500 text-black' : 'text-slate-600 dark:text-slate-400 hover:bg-black/5 dark:hover:bg-white/10 hover:text-slate-900 dark:hover:text-white'}
+                    `}
+                  >
+                    {t.icon}
+                    <span>{t.label}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         <button className="xl:hidden p-3 text-slate-900 dark:text-white z-50 glass-panel rounded-full cursor-pointer hover:scale-105 active:scale-95 transition-transform" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} type="button">
@@ -122,10 +157,19 @@ export const Header = ({ toggleTheme, isDark, lang, setLang }: HeaderProps) => {
             <button className="text-xl font-display font-bold uppercase text-amber-500 hover:text-amber-400 transition-colors flex items-center mt-4">
                 <LogIn size={20} className="mr-2" /> Войти
             </button>
-            <div className="flex items-center space-x-6 mt-12">
-               <button onClick={toggleTheme} className="p-4 rounded-full glass-panel cursor-pointer shadow-lg active:scale-95 transition-transform">
-                 {isDark ? <Sun size={24} /> : <Moon size={24} />}
-               </button>
+            <div className="flex flex-col items-center space-y-6 mt-12">
+               {/* Mobile Theme Switcher */}
+               <div className="flex space-x-2 bg-white/5 p-1 rounded-full">
+                 {themes.map(t => (
+                   <button
+                    key={t.id}
+                    onClick={() => setTheme(t.id)}
+                    className={`p-3 rounded-full transition-all ${theme === t.id ? 'bg-gold-500 text-black' : 'text-slate-400'}`}
+                   >
+                     {t.icon}
+                   </button>
+                 ))}
+               </div>
             </div>
           </div>
         )}

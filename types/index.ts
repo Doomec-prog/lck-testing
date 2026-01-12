@@ -23,6 +23,7 @@ export interface ProjectStat {
 }
 
 export type Language = 'RU' | 'KZ' | 'EN';
+export type Theme = 'light' | 'dark' | 'noir';
 
 // WordPress Types
 export interface WPPost {

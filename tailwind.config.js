@@ -13,16 +13,16 @@ module.exports = {
       },
       colors: {
         gold: {
-          400: '#E5C158', // Light Champagne
-          500: '#D4AF37', // Classic Champagne Gold (Metallic)
-          600: '#AA8C2C', // Dark Antique Gold
+          400: 'var(--color-gold-400)', // Dynamic
+          500: 'var(--color-gold-500)', // Dynamic
+          600: 'var(--color-gold-600)', // Dynamic
         },
         cinema: {
-          900: '#121212', // Dark Grey
-          950: '#050505', // True Matte Black (Void)
+          900: 'var(--color-cinema-900)',
+          950: 'var(--color-cinema-950)',
         },
         paper: {
-           100: '#F0F0EE', // Warm, dense paper texture (Tactile Materialism)
+           100: '#F0F0EE',
         }
       },
       animation: {
