@@ -69,10 +69,10 @@ export const Header = ({ theme, setTheme, isDark, lang, setLang }: HeaderProps) 
     );
   };
 
-  const themes: { id: Theme; label: string; icon: React.ReactNode }[] = [
-    { id: 'dark', label: 'Gold (Cinema)', icon: <Moon size={14} /> },
-    { id: 'light', label: 'Light (Paper)', icon: <Sun size={14} /> },
-    { id: 'noir', label: 'Noir (B&W)', icon: <Monitor size={14} /> },
+  const themes: { id: Theme; label: string; shortLabel: string; icon: React.ReactNode }[] = [
+    { id: 'dark', label: 'Gold (Cinema)', shortLabel: 'Gold', icon: <Moon size={18} /> },
+    { id: 'light', label: 'Light (Paper)', shortLabel: 'Light', icon: <Sun size={18} /> },
+    { id: 'noir', label: 'Noir (B&W)', shortLabel: 'Noir', icon: <Monitor size={18} /> },
   ];
 
   const currentThemeIcon = themes.find(t => t.id === theme)?.icon || <Moon size={14} />;
@@ -111,7 +111,7 @@ export const Header = ({ theme, setTheme, isDark, lang, setLang }: HeaderProps) 
              ))}
           </div>
           
-          {/* THEME SELECTOR DROPDOWN */}
+          {/* THEME SELECTOR DROPDOWN (DESKTOP) */}
           <div className="relative" ref={themeMenuRef}>
             <button 
               onClick={() => setIsThemeMenuOpen(!isThemeMenuOpen)} 
@@ -123,12 +123,12 @@ export const Header = ({ theme, setTheme, isDark, lang, setLang }: HeaderProps) 
             </button>
 
             {isThemeMenuOpen && (
-              <div className="absolute right-0 top-full mt-2 w-40 glass-panel rounded-2xl overflow-hidden shadow-2xl animate-fadeIn flex flex-col p-1">
+              <div className="absolute right-0 top-full mt-2 w-48 glass-panel rounded-2xl overflow-hidden shadow-2xl animate-fadeIn flex flex-col p-1 z-50">
                 {themes.map((t) => (
                   <button
                     key={t.id}
                     onClick={() => { setTheme(t.id); setIsThemeMenuOpen(false); }}
-                    className={`flex items-center space-x-3 px-4 py-3 text-xs font-bold uppercase tracking-wider transition-colors rounded-xl
+                    className={`flex items-center space-x-3 px-4 py-3 text-xs font-bold uppercase tracking-wider transition-colors rounded-xl text-left
                       ${theme === t.id ? 'bg-gold-500 text-black' : 'text-slate-600 dark:text-slate-400 hover:bg-black/5 dark:hover:bg-white/10 hover:text-slate-900 dark:hover:text-white'}
                     `}
                   >
@@ -147,30 +147,60 @@ export const Header = ({ theme, setTheme, isDark, lang, setLang }: HeaderProps) 
 
         {isMobileMenuOpen && (
           <div className="fixed inset-0 bg-paper-100/95 dark:bg-cinema-950/95 backdrop-blur-3xl z-40 flex flex-col items-center justify-center space-y-8 animate-fadeIn p-4 overflow-y-auto pointer-events-auto">
-            {navItems.map((item) => (
-              <Fragment key={item.label}>
-                <div className="text-2xl font-display font-bold uppercase text-slate-800 dark:text-white hover:text-gold-500 transition-all tracking-widest drop-shadow-sm">
-                   {renderLink(item)}
-                </div>
-              </Fragment>
-            ))}
-            <button className="text-xl font-display font-bold uppercase text-amber-500 hover:text-amber-400 transition-colors flex items-center mt-4">
+            <div className="w-full flex justify-center mb-8">
+               <div className="glass-panel px-6 py-2 rounded-full flex items-center space-x-2">
+                <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-display font-bold tracking-tighter uppercase flex items-center">
+                  <span className="text-slate-900 dark:text-white">LCK</span>
+                  <span className="text-gold-500">.KZ</span>
+                </Link>
+              </div>
+            </div>
+
+            <div className="flex flex-col items-center space-y-6 w-full">
+              {navItems.map((item) => (
+                <Fragment key={item.label}>
+                  <div className="text-2xl font-display font-bold uppercase text-slate-800 dark:text-white hover:text-gold-500 transition-all tracking-widest drop-shadow-sm">
+                    {renderLink(item)}
+                  </div>
+                </Fragment>
+              ))}
+            </div>
+
+            <div className="w-full max-w-xs h-px bg-slate-300 dark:bg-white/10 my-6"></div>
+
+            <button className="text-xl font-display font-bold uppercase text-amber-500 hover:text-amber-400 transition-colors flex items-center">
                 <LogIn size={20} className="mr-2" /> Войти
             </button>
-            <div className="flex flex-col items-center space-y-6 mt-12">
-               {/* Mobile Theme Switcher */}
-               <div className="flex space-x-2 bg-white/5 p-1 rounded-full">
+            
+            {/* MOBILE THEME SWITCHER (GRID LAYOUT) */}
+            <div className="w-full max-w-sm px-6 mt-8">
+               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center mb-4">Выберите тему</p>
+               <div className="grid grid-cols-3 gap-3">
                  {themes.map(t => (
                    <button
                     key={t.id}
                     onClick={() => setTheme(t.id)}
-                    className={`p-3 rounded-full transition-all ${theme === t.id ? 'bg-gold-500 text-black' : 'text-slate-400'}`}
+                    className={`flex flex-col items-center justify-center p-4 rounded-2xl border transition-all duration-300
+                      ${theme === t.id 
+                        ? 'bg-gold-500 text-black border-gold-500 shadow-[0_0_15px_rgba(212,175,55,0.3)] scale-105' 
+                        : 'bg-white/5 text-slate-400 border-white/5 hover:bg-white/10 hover:border-white/20'}
+                    `}
                    >
-                     {t.icon}
+                     <div className="mb-2">{t.icon}</div>
+                     <span className="text-[10px] font-bold uppercase tracking-wider">{t.shortLabel}</span>
                    </button>
                  ))}
                </div>
             </div>
+
+            <div className="flex items-center space-x-4 mt-8">
+               {(['RU', 'KZ', 'EN'] as const).map((l) => (
+                 <button key={l} type="button" onClick={() => setLang(l)} className={`cursor-pointer px-4 py-2 text-xs font-bold rounded-full transition-all duration-300 ${lang === l ? 'bg-gold-500 text-white shadow-[0_2px_10px_rgba(212,175,55,0.4)]' : 'text-slate-500 dark:text-slate-400 border border-transparent hover:border-white/10'}`}>
+                   {l}
+                 </button>
+               ))}
+            </div>
+
           </div>
         )}
       </div>
