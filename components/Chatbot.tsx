@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { X, Send, Loader2, Minimize2, Aperture, Film } from 'lucide-react';
 import { Language } from '@/types';
 import { translations } from '@/lib/translations';
+import { useGlobalContext } from '@/context/GlobalContext';
 
 interface ChatbotProps {
   lang: Language;
@@ -19,6 +20,9 @@ export const Chatbot = ({ lang }: ChatbotProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  
+  // Get mobile menu state from global context
+  const { isMobileMenuOpen } = useGlobalContext();
   
   // Animation States for "Aperture Creature"
   const [isRevealing, setIsRevealing] = useState(false); // Film strip reveal state
@@ -169,6 +173,9 @@ export const Chatbot = ({ lang }: ChatbotProps) => {
       setIsLoading(false);
     }
   };
+
+  // HIDE IF MOBILE MENU IS OPEN
+  if (isMobileMenuOpen) return null;
 
   return (
     <>

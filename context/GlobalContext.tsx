@@ -4,11 +4,13 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { Language, Theme } from '@/types';
 
 interface GlobalContextType {
-  isDark: boolean; // Computed property for backward compatibility and simpler logic
+  isDark: boolean;
   theme: Theme;
   setTheme: (theme: Theme) => void;
   lang: Language;
   setLang: (lang: Language) => void;
+  isMobileMenuOpen: boolean;
+  setIsMobileMenuOpen: (isOpen: boolean) => void;
 }
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
@@ -16,6 +18,7 @@ const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
 export const GlobalProvider = ({ children }: { children?: ReactNode }) => {
   const [theme, setTheme] = useState<Theme>('dark');
   const [lang, setLang] = useState<Language>('RU');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Computed property: "isDark" is true if theme is 'dark' OR 'noir'
   const isDark = theme === 'dark' || theme === 'noir';
@@ -33,8 +36,28 @@ export const GlobalProvider = ({ children }: { children?: ReactNode }) => {
     }
   }, [theme]);
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMobileMenuOpen]);
+
   return (
-    <GlobalContext.Provider value={{ isDark, theme, setTheme, lang, setLang }}>
+    <GlobalContext.Provider value={{ 
+      isDark, 
+      theme, 
+      setTheme, 
+      lang, 
+      setLang,
+      isMobileMenuOpen,
+      setIsMobileMenuOpen
+    }}>
       {children}
     </GlobalContext.Provider>
   );

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { NavItem, Language, Theme } from '@/types';
 import { translations } from '@/lib/translations';
+import { useGlobalContext } from '@/context/GlobalContext';
 
 interface HeaderProps {
   theme: Theme;
@@ -17,8 +18,11 @@ interface HeaderProps {
 
 export const Header = ({ theme, setTheme, isDark, lang, setLang }: HeaderProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
+  
+  // Use global state for mobile menu
+  const { isMobileMenuOpen, setIsMobileMenuOpen } = useGlobalContext();
+  
   const themeMenuRef = useRef<HTMLDivElement>(null);
   
   let pathname = '/';
@@ -105,7 +109,16 @@ export const Header = ({ theme, setTheme, isDark, lang, setLang }: HeaderProps) 
         <div className="hidden lg:flex items-center space-x-4 shrink-0 pointer-events-auto">
           <div className="flex items-center glass-panel rounded-full p-1.5">
              {(['RU', 'KZ', 'EN'] as const).map((l) => (
-               <button key={l} type="button" onClick={() => setLang(l)} className={`cursor-pointer px-4 py-1.5 text-[10px] font-bold rounded-full transition-all duration-300 ${lang === l ? 'bg-gold-500 text-white shadow-[0_2px_10px_rgba(212,175,55,0.4)]' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-black/5 dark:hover:bg-white/5'}`}>
+               <button 
+                  key={l} 
+                  type="button" 
+                  onClick={() => setLang(l)} 
+                  className={`cursor-pointer px-4 py-1.5 text-[10px] font-bold rounded-full transition-all duration-300 
+                    ${lang === l 
+                      ? 'bg-gold-500 text-white dark:text-black shadow-[0_2px_10px_rgba(212,175,55,0.4)]' 
+                      : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-black/5 dark:hover:bg-white/5'}
+                  `}
+               >
                  {l}
                </button>
              ))}
@@ -146,7 +159,7 @@ export const Header = ({ theme, setTheme, isDark, lang, setLang }: HeaderProps) 
         </button>
 
         {isMobileMenuOpen && (
-          <div className="fixed inset-0 bg-paper-100/95 dark:bg-cinema-950/95 backdrop-blur-3xl z-40 flex flex-col items-center justify-center space-y-8 animate-fadeIn p-4 overflow-y-auto pointer-events-auto">
+          <div className="fixed inset-0 bg-paper-100 dark:bg-black z-40 flex flex-col items-center justify-center space-y-8 animate-fadeIn p-4 overflow-y-auto pointer-events-auto">
             <div className="w-full flex justify-center mb-8">
                <div className="glass-panel px-6 py-2 rounded-full flex items-center space-x-2">
                 <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-display font-bold tracking-tighter uppercase flex items-center">
@@ -195,7 +208,16 @@ export const Header = ({ theme, setTheme, isDark, lang, setLang }: HeaderProps) 
 
             <div className="flex items-center space-x-4 mt-8">
                {(['RU', 'KZ', 'EN'] as const).map((l) => (
-                 <button key={l} type="button" onClick={() => setLang(l)} className={`cursor-pointer px-4 py-2 text-xs font-bold rounded-full transition-all duration-300 ${lang === l ? 'bg-gold-500 text-white shadow-[0_2px_10px_rgba(212,175,55,0.4)]' : 'text-slate-500 dark:text-slate-400 border border-transparent hover:border-white/10'}`}>
+                 <button 
+                  key={l} 
+                  type="button" 
+                  onClick={() => setLang(l)} 
+                  className={`cursor-pointer px-4 py-2 text-xs font-bold rounded-full transition-all duration-300 
+                    ${lang === l 
+                      ? 'bg-gold-500 text-white dark:text-black shadow-[0_2px_10px_rgba(212,175,55,0.4)]' 
+                      : 'text-slate-500 dark:text-slate-400 border border-transparent hover:border-white/10'}
+                  `}
+                 >
                    {l}
                  </button>
                ))}
