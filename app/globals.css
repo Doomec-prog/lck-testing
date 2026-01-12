@@ -10,6 +10,9 @@
   --color-gold-600: #AA8C2C;
   --color-cinema-900: #ffffff; /* In light mode cinema bg is white-ish usually, but we handle logic via dark class */
   --color-cinema-950: #F0F0EE; /* Paper color for light bg */
+  
+  /* Dynamic Spotlight Color (Gold by default) */
+  --spotlight-color: rgba(212, 175, 55, 0.15);
 }
 
 /* Dark Mode (Original Gold/Black) */
@@ -19,16 +22,20 @@
   --color-gold-600: #AA8C2C;
   --color-cinema-900: #121212;
   --color-cinema-950: #050505;
+  
+  --spotlight-color: rgba(212, 175, 55, 0.15);
 }
 
 /* Noir Mode (Black & White - Boss Request) */
-/* We apply .noir AND .dark together usually, but let's make .noir override colors */
 .noir {
   --color-gold-400: #e5e5e5; /* Silver/White */
   --color-gold-500: #ffffff; /* Pure White */
   --color-gold-600: #a3a3a3; /* Grey */
   --color-cinema-900: #0a0a0a;
   --color-cinema-950: #000000; /* True Black */
+  
+  /* Noir Spotlight (Cool White) */
+  --spotlight-color: rgba(255, 255, 255, 0.15);
 }
 
 /* Cinematic Scrollbar */

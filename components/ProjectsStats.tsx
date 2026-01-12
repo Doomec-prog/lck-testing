@@ -13,9 +13,13 @@ export const ProjectsStats: React.FC<ProjectsStatsProps> = ({ lang }) => {
 
   return (
     <section id="projects" className="py-0 overflow-visible relative z-10">
-      <div className="py-8 bg-gold-500/90 backdrop-blur-sm relative border-y border-white/20 z-20 shadow-[0_0_30px_rgba(212,175,55,0.2)]">
+      {/* 
+         Removed opacity (/90 -> /100) to ensure solid background for black text in Noir mode.
+         Added 'font-black' to marquee text for maximum legibility.
+      */}
+      <div className="py-8 bg-gold-500 relative border-y border-white/20 z-20 shadow-[0_0_30px_rgba(212,175,55,0.2)]">
         <div className="whitespace-nowrap overflow-hidden flex">
-          <div className="animate-marquee flex items-center space-x-16 text-5xl font-display font-bold uppercase tracking-wider text-cinema-950">
+          <div className="animate-marquee flex items-center space-x-16 text-5xl font-display font-black uppercase tracking-wider text-cinema-950">
              <span>{marqueeText}</span>
           </div>
         </div>

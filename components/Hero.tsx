@@ -57,7 +57,8 @@ export const Hero: React.FC<HeroProps> = ({ lang }) => {
         </FadeIn>
 
         <FadeIn delay={400}>
-          <p className="text-base sm:text-lg md:text-xl text-slate-200 max-w-3xl mx-auto mb-10 font-light leading-relaxed drop-shadow-md tracking-wide px-2">
+          {/* Added strong drop-shadow to text to ensure readability on white backgrounds (clapperboard scene) */}
+          <p className="text-base sm:text-lg md:text-xl text-slate-200 max-w-3xl mx-auto mb-10 font-light leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] tracking-wide px-2">
             {t.description}
           </p>
         </FadeIn>

@@ -11,7 +11,7 @@ interface SpotlightCardProps {
 export const SpotlightCard: React.FC<SpotlightCardProps> = ({ 
   children, 
   className = "", 
-  spotlightColor = "rgba(212, 175, 55, 0.1)" // Subtle Champagne Gold
+  spotlightColor = "var(--spotlight-color)" // Use the dynamic CSS variable by default
 }) => {
   const divRef = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
