@@ -1,3 +1,6 @@
+import 'server-only';
+
+import { load } from 'cheerio';
 import { WPPost, NewsItem, Language, WPAuthor, WPTaxonomy } from '../types';
 
 const WP_API_BASE = 'https://lck.kz/wp-json/wp/v2';
@@ -11,17 +14,14 @@ const forceHttps = (url: string | undefined | null): string => {
 };
 
 const decodeHtml = (html: string): string => {
-  if (typeof document === 'undefined') return html;
-  const txt = document.createElement("textarea");
-  txt.innerHTML = html;
-  return txt.value;
+  const $ = load(`<div>${html}</div>`);
+  return $('div').text();
 };
 
 const extractImageFromContent = (htmlContent: string): string | null => {
-  if (typeof DOMParser === 'undefined') return null;
-  const doc = new DOMParser().parseFromString(htmlContent, 'text/html');
-  const img = doc.querySelector('img');
-  return img ? img.src : null;
+  const $ = load(htmlContent);
+  const img = $('img').first();
+  return img.attr('src') ?? null;
 };
 
 const normalizePost = (post: WPPost, lang: Language): NewsItem => {
@@ -59,7 +59,9 @@ class WPApiService {
 
   private async fetch<T>(path: string, params: Record<string, string | number> = {}): Promise<T> {
     try {
-      const response = await fetch(this.getEndpoint(path, params));
+      const response = await fetch(this.getEndpoint(path, params), {
+        next: { revalidate: 3600 },
+      });
       if (!response.ok) throw new Error(`WP API Error: ${response.statusText}`);
       return await response.json();
     } catch (error) {

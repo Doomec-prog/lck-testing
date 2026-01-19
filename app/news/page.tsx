@@ -1,12 +1,10 @@
-'use client';
-
 import React from 'react';
 import { NewsPage as NewsPageComponent } from '../../components/pages/NewsPage';
-import { useGlobalContext } from '../../context/GlobalContext';
 import { ContactFooter } from '../../components/ContactFooter';
+import { getServerLanguage } from '@/lib/getLanguage';
 
 export default function NewsRoute() {
-  const { lang } = useGlobalContext();
+  const lang = getServerLanguage();
   
   return (
     <div className="relative z-10">

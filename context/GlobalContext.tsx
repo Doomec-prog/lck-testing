@@ -1,6 +1,7 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { Language, Theme } from '@/types';
 
 interface GlobalContextType {
@@ -9,15 +10,27 @@ interface GlobalContextType {
   setTheme: (theme: Theme) => void;
   lang: Language;
   setLang: (lang: Language) => void;
+  hasSession: boolean;
+  setHasSession: (hasSession: boolean) => void;
   isMobileMenuOpen: boolean;
   setIsMobileMenuOpen: (isOpen: boolean) => void;
 }
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
 
-export const GlobalProvider = ({ children }: { children?: ReactNode }) => {
+export const GlobalProvider = ({
+  children,
+  initialLang = 'RU',
+  initialHasSession = false,
+}: {
+  children?: ReactNode;
+  initialLang?: Language;
+  initialHasSession?: boolean;
+}) => {
+  const router = useRouter();
   const [theme, setTheme] = useState<Theme>('dark');
-  const [lang, setLang] = useState<Language>('RU');
+  const [lang, setLang] = useState<Language>(initialLang);
+  const [hasSession, setHasSession] = useState<boolean>(initialHasSession);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Computed property: "isDark" is true if theme is 'dark' OR 'noir'
@@ -48,13 +61,28 @@ export const GlobalProvider = ({ children }: { children?: ReactNode }) => {
     };
   }, [isMobileMenuOpen]);
 
+  const updateLang = useCallback(
+    (nextLang: Language) => {
+      setLang(nextLang);
+      document.cookie = `lang=${nextLang}; path=/; max-age=31536000; samesite=lax`;
+      router.refresh();
+    },
+    [router]
+  );
+
+  useEffect(() => {
+    document.cookie = `lang=${lang}; path=/; max-age=31536000; samesite=lax`;
+  }, [lang]);
+
   return (
     <GlobalContext.Provider value={{ 
       isDark, 
       theme, 
       setTheme, 
       lang, 
-      setLang,
+      setLang: updateLang,
+      hasSession,
+      setHasSession,
       isMobileMenuOpen,
       setIsMobileMenuOpen
     }}>
