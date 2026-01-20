@@ -35,13 +35,21 @@ export default async function AccountPage() {
   }
 
   const lang = getServerLanguage();
-  const title = lang === 'EN' ? 'Account' : lang === 'KZ' ? 'Кабинет' : 'Кабинет';
-  const subtitle =
-    lang === 'EN'
-      ? 'You are signed in. The personal cabinet is under construction.'
-      : lang === 'KZ'
-      ? 'Сіз жүйеге кірдіңіз. Жеке кабинет жақын арада іске қосылады.'
-      : 'Вы вошли в систему. Личный кабинет в разработке.';
+  const copy = {
+    EN: {
+      title: 'Account',
+      subtitle: 'You are signed in. The personal cabinet is under construction.',
+    },
+    KZ: {
+      title: 'Кабинет',
+      subtitle: 'Сіз жүйеге кірдіңіз. Жеке кабинет жақын арада іске қосылады.',
+    },
+    RU: {
+      title: 'Кабинет',
+      subtitle: 'Вы вошли в систему. Личный кабинет в разработке.',
+    },
+  };
+  const { title, subtitle } = copy[lang];
 
   return (
     <div className="relative z-10 pt-32 pb-20 min-h-screen">

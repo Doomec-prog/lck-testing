@@ -64,7 +64,6 @@ export const GlobalProvider = ({
   const updateLang = useCallback(
     (nextLang: Language) => {
       setLang(nextLang);
-      document.cookie = `lang=${nextLang}; path=/; max-age=31536000; samesite=lax`;
       router.refresh();
     },
     [router]
@@ -73,6 +72,10 @@ export const GlobalProvider = ({
   useEffect(() => {
     document.cookie = `lang=${lang}; path=/; max-age=31536000; samesite=lax`;
   }, [lang]);
+
+  useEffect(() => {
+    setHasSession(initialHasSession);
+  }, [initialHasSession]);
 
   return (
     <GlobalContext.Provider value={{ 

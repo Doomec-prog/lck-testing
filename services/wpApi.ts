@@ -1,6 +1,5 @@
 import 'server-only';
 
-import { load } from 'cheerio';
 import { WPPost, NewsItem, Language, WPAuthor, WPTaxonomy } from '../types';
 
 const WP_API_BASE = 'https://lck.kz/wp-json/wp/v2';
@@ -13,15 +12,27 @@ const forceHttps = (url: string | undefined | null): string => {
   return url;
 };
 
-const decodeHtml = (html: string): string => {
-  const $ = load(`<div>${html}</div>`);
-  return $('div').text();
+const decodeHtmlEntities = (text: string): string => {
+  const withNamedEntities = text
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>');
+
+  return withNamedEntities.replace(/&#(\d+);/g, (_, code) =>
+    String.fromCharCode(Number(code))
+  );
 };
 
+const stripHtml = (html: string): string => html.replace(/<[^>]*>/g, '');
+
+const decodeHtml = (html: string): string => decodeHtmlEntities(stripHtml(html));
+
 const extractImageFromContent = (htmlContent: string): string | null => {
-  const $ = load(htmlContent);
-  const img = $('img').first();
-  return img.attr('src') ?? null;
+  const match = htmlContent.match(/<img[^>]+src=["']([^"']+)["']/i);
+  return match?.[1] ?? null;
 };
 
 const normalizePost = (post: WPPost, lang: Language): NewsItem => {
