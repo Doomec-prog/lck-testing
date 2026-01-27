@@ -29,9 +29,14 @@ export default async function RootLayout({
   let session = null;
 
   if (hasSupabaseEnv) {
-    const supabase = createSupabaseServerClient();
-    const { data } = await supabase.auth.getSession();
-    session = data.session;
+    try {
+      const supabase = createSupabaseServerClient();
+      const { data } = await supabase.auth.getSession();
+      session = data.session;
+    } catch (error) {
+      console.error('Supabase auth error in RootLayout:', error);
+      // Continue rendering without session
+    }
   }
 
   const htmlLang = initialLang === 'EN' ? 'en' : initialLang === 'KZ' ? 'kk' : 'ru';
@@ -40,15 +45,15 @@ export default async function RootLayout({
     <html lang={htmlLang} className={`${inter.variable} ${oswald.variable} scroll-smooth`}>
       <body className="bg-paper-100 text-slate-800 dark:bg-cinema-950 dark:text-slate-200 transition-colors duration-700 overflow-x-hidden">
         <GlobalProvider initialLang={initialLang} initialHasSession={Boolean(session)}>
-           {/* UI Overlays */}
-           <div className="relative z-[100]">
+          {/* UI Overlays */}
+          <div className="relative z-[100]">
             <CustomCursor />
             <NoiseOverlay />
           </div>
-          
+
           {/* Main Layout Wrapper (Client Component) */}
           <Wrapper>
-             {children}
+            {children}
           </Wrapper>
         </GlobalProvider>
       </body>
