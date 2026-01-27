@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,7 +24,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Message is required' }, { status: 400 });
     }
 
-    const ai = new GoogleGenAI({ apiKey });
+    // Initialize Gemini AI (Standard SDK)
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-flash",
+      systemInstruction: systemInstruction
+    });
 
     // Validate and format history
     const formattedHistory = Array.isArray(history)
@@ -36,22 +41,22 @@ export async function POST(request: NextRequest) {
         }))
       : [];
 
-    const chat = ai.chats.create({
-      model: 'gemini-3-flash-preview',
-      config: {
-        systemInstruction: systemInstruction || undefined,
-        temperature: 0.7
+    const chat = model.startChat({
+      history: formattedHistory,
+      generationConfig: {
+        temperature: 0.7,
       },
-      history: formattedHistory
     });
 
-    const result = await chat.sendMessage({ message: String(message) });
+    const result = await chat.sendMessage(String(message));
+    const response = await result.response;
+    const text = response.text();
 
-    if (!result || !result.text) {
+    if (!text) {
       throw new Error('Empty response from Gemini API');
     }
 
-    return NextResponse.json({ text: result.text });
+    return NextResponse.json({ text });
 
   } catch (error: any) {
     console.error('Gemini API Handler Error:', error);

@@ -9,6 +9,10 @@ export async function GET(request: Request) {
   try {
     const requestUrl = new URL(request.url);
     const code = requestUrl.searchParams.get('code');
+    const origin = requestUrl.origin;
+
+    console.log('[Auth Debug] Callback called. Origin:', origin);
+    console.log('[Auth Debug] Code present:', !!code);
 
     if (code) {
       const cookieStore = cookies();
@@ -33,11 +37,12 @@ export async function GET(request: Request) {
           },
         }
       );
-      const { error } = await supabase.auth.exchangeCodeForSession(code);
+      const { error, data } = await supabase.auth.exchangeCodeForSession(code);
       if (error) {
-        console.error("Auth Exchange Error:", error);
+        console.error("[Auth Debug] Exchange Error:", error);
         return NextResponse.redirect(new URL(`/?error=${error.message}`, requestUrl.origin));
       }
+      console.log('[Auth Debug] Exchange Success. Session:', !!data.session);
     }
 
     return NextResponse.redirect(new URL('/account', requestUrl.origin));
