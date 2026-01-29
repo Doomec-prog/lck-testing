@@ -15,10 +15,15 @@ export async function GET(request: Request) {
     console.log('[Auth Debug] Code present:', !!code);
 
     if (code) {
+      if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+        console.error("CRITICAL: Supabase keys missing in Auth Callback");
+        return NextResponse.redirect(new URL('/?error=server_config_error', requestUrl.origin));
+      }
+
       const cookieStore = cookies();
       const supabase = createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        process.env.NEXT_PUBLIC_SUPABASE_URL,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
         {
           cookies: {
             getAll() {
@@ -37,17 +42,24 @@ export async function GET(request: Request) {
           },
         }
       );
-      const { error, data } = await supabase.auth.exchangeCodeForSession(code);
-      if (error) {
-        console.error("[Auth Debug] Exchange Error:", error);
-        return NextResponse.redirect(new URL(`/?error=${error.message}`, requestUrl.origin));
+
+      try {
+        const { error, data } = await supabase.auth.exchangeCodeForSession(code);
+        if (error) {
+          console.error("[Auth Debug] Exchange Error:", error);
+          return NextResponse.redirect(new URL(`/?error=${encodeURIComponent(error.message)}`, requestUrl.origin));
+        }
+        console.log('[Auth Debug] Exchange Success. Session:', !!data.session);
+      } catch (authError: any) {
+        console.error("[Auth Debug] Unexpected Exchange Exception:", authError);
+        return NextResponse.redirect(new URL(`/?error=auth_exchange_failed`, requestUrl.origin));
       }
-      console.log('[Auth Debug] Exchange Success. Session:', !!data.session);
     }
 
     return NextResponse.redirect(new URL('/account', requestUrl.origin));
   } catch (e: any) {
-    console.error("Callback Route Error:", e);
-    return NextResponse.json({ error: e.message }, { status: 500 });
+    console.error("Callback Route Fatal Error:", e);
+    // Safe fallback to home instead of 500 JSON logging
+    return NextResponse.redirect(new URL(`/?error=internal_server_error`, request.url));
   }
 }
