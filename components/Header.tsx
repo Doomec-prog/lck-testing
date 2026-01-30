@@ -21,7 +21,7 @@ export const Header = ({ theme, setTheme, isDark, lang, setLang }: HeaderProps) 
   const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
   
   // Use global state for mobile menu
-  const { isMobileMenuOpen, setIsMobileMenuOpen } = useGlobalContext();
+  const { isMobileMenuOpen, setIsMobileMenuOpen, hasSession } = useGlobalContext();
   
   const themeMenuRef = useRef<HTMLDivElement>(null);
   
@@ -56,6 +56,9 @@ export const Header = ({ theme, setTheme, isDark, lang, setLang }: HeaderProps) 
     { label: t.residents, href: '/residents' },
     { label: t.contacts, href: '#contacts' },
   ];
+
+  const authLabel = hasSession ? t.cabinet : t.login;
+  const authHref = hasSession ? '/account' : '/login';
 
   const renderLink = (item: NavItem) => {
     const isAnchor = item.href.startsWith('#');
@@ -100,10 +103,13 @@ export const Header = ({ theme, setTheme, isDark, lang, setLang }: HeaderProps) 
             </div>
           ))}
           <div className="w-px h-5 bg-slate-300 dark:bg-slate-700 mx-2 shadow-[1px_0_0_white] shrink-0"></div>
-          <button className="flex items-center space-x-1 text-[10px] 2xl:text-xs font-bold text-amber-500 hover:text-amber-400 uppercase tracking-widest px-4 py-2 rounded-full hover:bg-amber-500/10 transition-colors whitespace-nowrap shrink-0">
+          <Link
+            href={authHref}
+            className="flex items-center space-x-1 text-[10px] 2xl:text-xs font-bold text-amber-500 hover:text-amber-400 uppercase tracking-widest px-4 py-2 rounded-full hover:bg-amber-500/10 transition-colors whitespace-nowrap shrink-0"
+          >
              <LogIn size={12} />
-             <span>Войти</span>
-          </button>
+             <span>{authLabel}</span>
+          </Link>
         </nav>
 
         <div className="hidden lg:flex items-center space-x-4 shrink-0 pointer-events-auto">
@@ -181,9 +187,9 @@ export const Header = ({ theme, setTheme, isDark, lang, setLang }: HeaderProps) 
 
             <div className="w-full max-w-xs h-px bg-slate-300 dark:bg-white/10 my-6"></div>
 
-            <button className="text-xl font-display font-bold uppercase text-amber-500 hover:text-amber-400 transition-colors flex items-center">
-                <LogIn size={20} className="mr-2" /> Войти
-            </button>
+            <Link href={authHref} className="text-xl font-display font-bold uppercase text-amber-500 hover:text-amber-400 transition-colors flex items-center">
+                <LogIn size={20} className="mr-2" /> {authLabel}
+            </Link>
             
             {/* MOBILE THEME SWITCHER (GRID LAYOUT) */}
             <div className="w-full max-w-sm px-6 mt-8">

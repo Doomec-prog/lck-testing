@@ -1,3 +1,5 @@
+import 'server-only';
+
 import { WPPost, NewsItem, Language, WPAuthor } from '@/types';
 
 const WP_API_BASE = 'https://lck.kz/wp-json/wp/v2';
@@ -10,18 +12,27 @@ const forceHttps = (url: string | undefined | null): string => {
   return url;
 };
 
-const decodeHtml = (html: string): string => {
-  if (typeof document === 'undefined') return html;
-  const txt = document.createElement("textarea");
-  txt.innerHTML = html;
-  return txt.value;
+const decodeHtmlEntities = (text: string): string => {
+  const withNamedEntities = text
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>');
+
+  return withNamedEntities.replace(/&#(\d+);/g, (_, code) =>
+    String.fromCharCode(Number(code))
+  );
 };
 
+const stripHtml = (html: string): string => html.replace(/<[^>]*>/g, '');
+
+const decodeHtml = (html: string): string => decodeHtmlEntities(stripHtml(html));
+
 const extractImageFromContent = (htmlContent: string): string | null => {
-  if (typeof DOMParser === 'undefined') return null;
-  const doc = new DOMParser().parseFromString(htmlContent, 'text/html');
-  const img = doc.querySelector('img');
-  return img ? img.src : null;
+  const match = htmlContent.match(/<img[^>]+src=["']([^"']+)["']/i);
+  return match?.[1] ?? null;
 };
 
 const normalizePost = (post: WPPost, lang: Language): NewsItem => {
@@ -59,7 +70,9 @@ class WPApiService {
 
   private async fetch<T>(path: string, params: Record<string, string | number> = {}): Promise<T> {
     try {
-      const response = await fetch(this.getEndpoint(path, params));
+      const response = await fetch(this.getEndpoint(path, params), {
+        next: { revalidate: 3600 },
+      });
       if (!response.ok) throw new Error(`WP API Error: ${response.statusText}`);
       return await response.json();
     } catch (error) {

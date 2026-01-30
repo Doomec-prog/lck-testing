@@ -1,12 +1,10 @@
-'use client';
-
 import React from 'react';
 import { MembersPage as MembersPageComponent } from '../../components/pages/MembersPage';
-import { useGlobalContext } from '../../context/GlobalContext';
 import { ContactFooter } from '../../components/ContactFooter';
+import { getServerLanguage } from '@/lib/getLanguage';
 
 export default function MembersRoute() {
-  const { lang } = useGlobalContext();
+  const lang = getServerLanguage();
 
   return (
     <div className="relative z-10">

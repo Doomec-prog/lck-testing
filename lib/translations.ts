@@ -13,6 +13,8 @@ export const translations = {
       gallery: 'Галерея',
       opinion: 'Мнение',
       logout: 'Выйти',
+      login: 'Войти',
+      cabinet: 'Кабинет',
     },
     hero: {
       badge: 'LCK.KZ',
@@ -184,6 +186,8 @@ export const translations = {
       gallery: 'Галерея',
       opinion: 'Пікір',
       logout: 'Шығу',
+      login: 'Кіру',
+      cabinet: 'Кабинет',
     },
     hero: {
       badge: 'LCK.KZ',
@@ -355,6 +359,8 @@ export const translations = {
       gallery: 'Gallery',
       opinion: 'Opinion',
       logout: 'Logout',
+      login: 'Log in',
+      cabinet: 'Account',
     },
     hero: {
       badge: 'LCK.KZ',

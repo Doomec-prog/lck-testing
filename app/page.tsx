@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import { Hero } from '../components/Hero';
 import { About } from '../components/About';
@@ -12,10 +10,10 @@ import { News } from '../components/News';
 import { CTA } from '../components/CTA';
 import { ContactFooter } from '../components/ContactFooter';
 import { CinematicMist } from '../components/ui/CinematicMist';
-import { useGlobalContext } from '../context/GlobalContext';
+import { getServerLanguage } from '@/lib/getLanguage';
 
 export default function Home() {
-  const { lang } = useGlobalContext();
+  const lang = getServerLanguage();
 
   return (
     <div className="relative z-10">

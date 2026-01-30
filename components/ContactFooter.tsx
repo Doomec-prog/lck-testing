@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { Instagram, MessageCircle, MapPin, Mail, Send } from 'lucide-react';
 import { FadeIn } from './ui/FadeIn';
@@ -27,8 +29,8 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({ lang }) => {
           <div className="lg:col-span-7">
             <FadeIn>
               <div className="flex items-center space-x-4 mb-10">
-                 <div className="h-12 w-1 bg-gold-500 rounded-full shadow-[0_0_15px_rgba(212,175,55,0.6)]"></div>
-                 <h2 className="text-5xl font-display font-bold uppercase text-white tracking-tight">{t.title}</h2>
+                <div className="h-12 w-1 bg-gold-500 rounded-full shadow-[0_0_15px_rgba(212,175,55,0.6)]"></div>
+                <h2 className="text-5xl font-display font-bold uppercase text-white tracking-tight">{t.title}</h2>
               </div>
               <div className={`${darkGlassCard} p-8 md:p-12 rounded-[2.5rem]`}>
                 <p className="text-slate-400 mb-10 text-lg font-light leading-relaxed">{t.desc}</p>
@@ -59,63 +61,63 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({ lang }) => {
           </div>
           <div className="lg:col-span-5 flex flex-col justify-between">
             <FadeIn delay={200}>
-               <div className="mb-16 pl-0 lg:pl-10">
-                  <h3 className="text-2xl font-display font-bold uppercase text-white mb-8 tracking-wider flex items-center">
-                    <span className="w-2 h-2 rounded-full bg-gold-500 mr-3 animate-pulse"></span>
-                    {t.contacts.title}
-                  </h3>
-                  <div className="space-y-8">
-                    <a href="#" className="flex items-start space-x-6 group">
-                      <div className="p-4 rounded-2xl bg-[#151515] shadow-[5px_5px_10px_rgba(0,0,0,0.5),-5px_-5px_10px_rgba(255,255,255,0.05)] border border-white/5 group-hover:border-gold-500/30 transition-all">
-                        <MapPin size={24} className="text-slate-400 group-hover:text-gold-500 transition-colors" />
-                      </div>
-                      <div className="pt-1">
-                        <p className="text-xs text-slate-500 uppercase tracking-widest font-bold mb-1">Адрес</p>
-                        <span className="text-lg text-slate-200 group-hover:text-white transition-colors leading-tight block">{t.contacts.address}</span>
-                      </div>
+              <div className="mb-16 pl-0 lg:pl-10">
+                <h3 className="text-2xl font-display font-bold uppercase text-white mb-8 tracking-wider flex items-center">
+                  <span className="w-2 h-2 rounded-full bg-gold-500 mr-3 animate-pulse"></span>
+                  {t.contacts.title}
+                </h3>
+                <div className="space-y-8">
+                  <a href="#" className="flex items-start space-x-6 group">
+                    <div className="p-4 rounded-2xl bg-[#151515] shadow-[5px_5px_10px_rgba(0,0,0,0.5),-5px_-5px_10px_rgba(255,255,255,0.05)] border border-white/5 group-hover:border-gold-500/30 transition-all">
+                      <MapPin size={24} className="text-slate-400 group-hover:text-gold-500 transition-colors" />
+                    </div>
+                    <div className="pt-1">
+                      <p className="text-xs text-slate-500 uppercase tracking-widest font-bold mb-1">Адрес</p>
+                      <span className="text-lg text-slate-200 group-hover:text-white transition-colors leading-tight block">{t.contacts.address}</span>
+                    </div>
+                  </a>
+                  <a href="mailto:leaguecinemakz@gmail.com" className="flex items-start space-x-6 group">
+                    <div className="p-4 rounded-2xl bg-[#151515] shadow-[5px_5px_10px_rgba(0,0,0,0.5),-5px_-5px_10px_rgba(255,255,255,0.05)] border border-white/5 group-hover:border-gold-500/30 transition-all">
+                      <Mail size={24} className="text-slate-400 group-hover:text-gold-500 transition-colors" />
+                    </div>
+                    <div className="pt-1">
+                      <p className="text-xs text-slate-500 uppercase tracking-widest font-bold mb-1">Email</p>
+                      <span className="text-lg text-slate-200 group-hover:text-white transition-colors leading-tight block">leaguecinemakz@gmail.com</span>
+                    </div>
+                  </a>
+                </div>
+                <div className="flex space-x-4 mt-12">
+                  {[Instagram, MessageCircle].map((Icon, i) => (
+                    <a key={i} href="#" className="w-14 h-14 rounded-full bg-[#151515] flex items-center justify-center text-slate-400 hover:text-gold-500 transition-all shadow-[5px_5px_10px_rgba(0,0,0,0.5),-5px_-5px_10px_rgba(255,255,255,0.05)] hover:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.8)] active:scale-95">
+                      <Icon size={24} />
                     </a>
-                    <a href="mailto:leaguecinemakz@gmail.com" className="flex items-start space-x-6 group">
-                      <div className="p-4 rounded-2xl bg-[#151515] shadow-[5px_5px_10px_rgba(0,0,0,0.5),-5px_-5px_10px_rgba(255,255,255,0.05)] border border-white/5 group-hover:border-gold-500/30 transition-all">
-                        <Mail size={24} className="text-slate-400 group-hover:text-gold-500 transition-colors" />
-                      </div>
-                      <div className="pt-1">
-                        <p className="text-xs text-slate-500 uppercase tracking-widest font-bold mb-1">Email</p>
-                        <span className="text-lg text-slate-200 group-hover:text-white transition-colors leading-tight block">leaguecinemakz@gmail.com</span>
-                      </div>
-                    </a>
-                  </div>
-                  <div className="flex space-x-4 mt-12">
-                     {[Instagram, MessageCircle].map((Icon, i) => (
-                       <a key={i} href="#" className="w-14 h-14 rounded-full bg-[#151515] flex items-center justify-center text-slate-400 hover:text-gold-500 transition-all shadow-[5px_5px_10px_rgba(0,0,0,0.5),-5px_-5px_10px_rgba(255,255,255,0.05)] hover:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.8)] active:scale-95">
-                         <Icon size={24} />
-                       </a>
-                     ))}
-                  </div>
-               </div>
-               <div className="pl-0 lg:pl-10 grid grid-cols-2 gap-4 text-sm font-medium text-slate-500 border-t border-white/5 pt-8">
-                  <a href="#about" className="hover:text-gold-500 transition-colors uppercase tracking-wider">{navT.about}</a>
-                  <a href="#news" className="hover:text-gold-500 transition-colors uppercase tracking-wider">{navT.news}</a>
-                  <a href="#projects" className="hover:text-gold-500 transition-colors uppercase tracking-wider">{navT.projects}</a>
-                  <a href="#residents" className="hover:text-gold-500 transition-colors uppercase tracking-wider">{navT.residents}</a>
-               </div>
+                  ))}
+                </div>
+              </div>
+              <div className="pl-0 lg:pl-10 grid grid-cols-2 gap-4 text-sm font-medium text-slate-500 border-t border-white/5 pt-8">
+                <a href="#about" className="hover:text-gold-500 transition-colors uppercase tracking-wider">{navT.about}</a>
+                <a href="#news" className="hover:text-gold-500 transition-colors uppercase tracking-wider">{navT.news}</a>
+                <a href="#projects" className="hover:text-gold-500 transition-colors uppercase tracking-wider">{navT.projects}</a>
+                <a href="#residents" className="hover:text-gold-500 transition-colors uppercase tracking-wider">{navT.residents}</a>
+              </div>
             </FadeIn>
           </div>
         </div>
         <FadeIn delay={300}>
-           <div className={`${darkGlassCard} rounded-[2rem] p-4 flex flex-col md:flex-row items-center justify-between gap-6`}>
-              <div className="flex-1 w-full md:w-auto px-4">
-                 <h4 className="text-white font-bold uppercase tracking-wider text-sm mb-1">{t.join.title}</h4>
-                 <p className="text-slate-500 text-xs">{t.join.desc}</p>
-              </div>
-              <div className="flex w-full md:w-auto bg-[#151515] rounded-xl p-1 shadow-[inset_2px_2px_4px_rgba(0,0,0,0.8)]">
-                  <input type="email" placeholder="Email..." className="bg-transparent border-none outline-none text-white px-4 py-2 w-full md:w-64 placeholder-slate-600" />
-                  <button className="bg-white/10 hover:bg-gold-500 text-white hover:text-black rounded-lg px-6 py-2 font-bold uppercase text-xs transition-all tracking-wider">OK</button>
-              </div>
-              <div className="text-slate-600 text-[10px] font-mono uppercase tracking-widest px-4 md:border-l border-white/10 md:text-right">
-                 <p>&copy; 2025 LCK.KZ</p>
-                 <p>{t.copyright} <span className="text-gold-500">Centurion Films</span></p>
-              </div>
-           </div>
+          <div className={`${darkGlassCard} rounded-[2rem] p-4 flex flex-col md:flex-row items-center justify-between gap-6`}>
+            <div className="flex-1 w-full md:w-auto px-4">
+              <h4 className="text-white font-bold uppercase tracking-wider text-sm mb-1">{t.join.title}</h4>
+              <p className="text-slate-500 text-xs">{t.join.desc}</p>
+            </div>
+            <div className="flex w-full md:w-auto bg-[#151515] rounded-xl p-1 shadow-[inset_2px_2px_4px_rgba(0,0,0,0.8)]">
+              <input type="email" placeholder="Email..." className="bg-transparent border-none outline-none text-white px-4 py-2 w-full md:w-64 placeholder-slate-600" />
+              <button className="bg-white/10 hover:bg-gold-500 text-white hover:text-black rounded-lg px-6 py-2 font-bold uppercase text-xs transition-all tracking-wider">OK</button>
+            </div>
+            <div className="text-slate-600 text-[10px] font-mono uppercase tracking-widest px-4 md:border-l border-white/10 md:text-right">
+              <p>&copy; 2025 LCK.KZ</p>
+              <p>{t.copyright} <span className="text-gold-500">Centurion Films</span></p>
+            </div>
+          </div>
         </FadeIn>
       </div>
     </footer>
