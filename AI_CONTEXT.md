@@ -1,23 +1,50 @@
 # Project Context & State
 
+> Last updated: 2026-02-26 | Branch: `main` | Status: **Production**
+
 ## Authentication
-- **Provider**: Supabase Auth (SSR)
-- **Status**: Configured. Route Handlers use `@supabase/ssr`.
-- **Callback**: `app/auth/callback/route.ts` handles code exchange with robust error handling.
-- **Redirects**: Configured in Supabase Dashboard with wildcard `https://lck-testing-*-doomec-progs-projects.vercel.app/**`.
+- **Provider**: Supabase Auth (SSR via `@supabase/ssr`)
+- **Callback**: `app/auth/callback/route.ts` — robust error handling, no 500s
+- **Middleware**: `middleware.ts` — auto-refreshes session tokens
+- **Login**: `app/login/page.tsx` + `components/auth/LoginForm.tsx`
 
 ## AI Integration
-- **SDK**: `@google/generative-ai` (Official Node.js SDK)
-- **Version**: `^0.21.0` (Supports systemInstruction)
+- **SDK**: `@google/generative-ai` v0.21.0
 - **Model**: `gemini-1.5-flash`
-- **Route**: `app/api/chat/route.ts` (Dynamic Route Handler)
+- **Route**: `app/api/chat/route.ts` (force-dynamic)
 
-## Recent Fixes
-- Replaced `@google/genai` with `@google/generative-ai` to fix module resolution errors on Vercel.
-- Forced `dynamic = 'force-dynamic'` on auth and chat routes to prevent static generation 500 errors.
-- Added debug logging to Auth Callback.
-- Removed unused dependencies (`cheerio`).
+## Personal Cabinet ✅ (Production)
+### Application Wizard (`app/apply`)
+- 4-step form: Personal → Professional → Documents → Review
+- Components: `components/cabinet/Wizard/`
+- Submits to Supabase `profiles` + `applications` tables
+- File uploads to `cabinet-documents` Storage bucket
 
-## Pending / Next Steps
-- Verify Auth flow on Vercel Preview.
-- Verify Chatbot response on Vercel Preview.
+### Member Dashboard (`app/account`)
+- Routes by user status: applicant → status tracker, member → dashboard
+- Components: `components/cabinet/Dashboard/`
+  - `StatusCard` — 5 status variants (draft/submitted/approved/rejected/changes_requested)
+  - `ProfileCard` — displays submitted application data
+  - `FeatureCards` — 6 upcoming features (Digital Card, Dues, Networking, Events, Legal, Resources)
+
+## Database (Supabase)
+- **`profiles`** — extends `auth.users` (full_name, city, avatar_url, status, membership_id)
+- **`applications`** — wizard submissions (personal + professional + documents)
+- **RLS**: Enabled. Users can only read/write their own data.
+- **Storage Buckets**: `cabinet-documents` (private), `avatars` (public)
+- **Schema**: `supabase_schema.sql` (reference only, already executed)
+
+## Completed Milestones
+1. ✅ WP API server-only refactor + caching
+2. ✅ Supabase SSR migration (from deprecated auth-helpers)
+3. ✅ Fix 500 errors (dynamic routes, SDK conflict)
+4. ✅ Application Wizard (4-step registration)
+5. ✅ Member Dashboard (status, profile, feature cards)
+
+## Upcoming Features (Placeholder Cards)
+- 🎬 Digital Member Card (QR-code)
+- 💳 Membership Dues tracking
+- 🤝 Networking / colleague search
+- 📅 Event Calendar
+- ⚖️ Legal Support templates
+- 📦 Resources (logos, letterheads)
