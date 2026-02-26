@@ -48,3 +48,4 @@
 - 📅 Event Calendar
 - ⚖️ Legal Support templates
 - 📦 Resources (logos, letterheads)
+ 
