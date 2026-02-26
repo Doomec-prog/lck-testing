@@ -57,3 +57,33 @@ export interface WPTaxonomy {
   link: string;
   taxonomy: string;
 }
+
+// Personal Cabinet Types
+export type UserStatus = 'applicant' | 'member' | 'admin';
+export type ApplicationStatus = 'draft' | 'submitted' | 'approved' | 'rejected' | 'changes_requested';
+
+export interface UserProfile {
+  id: string; // matches auth.users id
+  full_name?: string;
+  city?: string;
+  avatar_url?: string;
+  status: UserStatus;
+  membership_id?: string;
+  updated_at?: string;
+}
+
+export interface ApplicationDraft {
+  id?: string;
+  user_id: string;
+  full_name: string;
+  city: string;
+  email: string;
+  phone: string;
+  education?: string;
+  profession?: string;
+  filmography_links?: string[]; // stored as JSONB
+  documents_urls?: Record<string, string>; // { "id_card": "url", ... }
+  status: ApplicationStatus;
+  created_at?: string;
+  updated_at?: string;
+}
