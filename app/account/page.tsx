@@ -1,66 +1,63 @@
-import React from 'react';
-import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabaseServer';
-import { getServerLanguage } from '@/lib/getLanguage';
+import { redirect } from 'next/navigation';
+import { UserProfile } from '@/types';
 
 export default async function AccountPage() {
-  const hasSupabaseEnv = Boolean(
-    process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  );
-
-  if (!hasSupabaseEnv) {
-    return (
-      <div className="relative z-10 pt-32 pb-20 min-h-screen">
-        <div className="container mx-auto px-6">
-          <div className="max-w-2xl mx-auto glass-panel rounded-3xl p-10 text-center">
-            <h1 className="text-3xl md:text-4xl font-display font-bold uppercase text-slate-900 dark:text-white mb-4">
-              Supabase
-            </h1>
-            <p className="text-slate-600 dark:text-slate-400">
-              Supabase environment variables are not configured.
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   const supabase = createSupabaseServerClient();
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+
+  const { data: { session } } = await supabase.auth.getSession();
 
   if (!session) {
     redirect('/login');
   }
 
-  const lang = getServerLanguage();
-  const copy = {
-    EN: {
-      title: 'Account',
-      subtitle: 'You are signed in. The personal cabinet is under construction.',
-    },
-    KZ: {
-      title: 'Кабинет',
-      subtitle: 'Сіз жүйеге кірдіңіз. Жеке кабинет жақын арада іске қосылады.',
-    },
-    RU: {
-      title: 'Кабинет',
-      subtitle: 'Вы вошли в систему. Личный кабинет в разработке.',
-    },
-  };
-  const { title, subtitle } = copy[lang];
+  // Fetch profile
+  const { data: profile, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', session.user.id)
+    .single();
+
+  const userProfile = profile as UserProfile | null;
+
+  // Route based on status
+  // 1. If no profile or 'applicant' status -> Redirect to Apply Wizard or Status Tracker
+  if (!userProfile || userProfile.status === 'applicant') {
+    // Check if they have an active application
+    const { data: application } = await supabase
+      .from('applications')
+      .select('status')
+      .eq('user_id', session.user.id)
+      .single();
+
+    if (application) {
+      return (
+        <div className="min-h-screen bg-cinema-950 pt-32 text-center text-white">
+          <h1 className="text-3xl font-display uppercase mb-4">Application Status</h1>
+          <p className="text-xl text-amber-500 uppercase tracking-widest">{application.status}</p>
+          <p className="mt-4 text-slate-400">Your application is currently under review.</p>
+        </div>
+      );
+    } else {
+      // No application yet -> Go to Wizard
+      redirect('/apply');
+    }
+  }
+
+  // 2. If 'member' -> Show Dashboard
+  if (userProfile.status === 'member' || userProfile.status === 'admin') {
+    return (
+      <div className="min-h-screen bg-cinema-950 pt-32 text-center text-white">
+        <h1 className="text-4xl font-display uppercase mb-4 text-gold-500">Welcome, Member</h1>
+        <p className="text-lg">Dashboard coming soon...</p>
+        {/* <MemberDashboard profile={userProfile} /> */}
+      </div>
+    );
+  }
 
   return (
-    <div className="relative z-10 pt-32 pb-20 min-h-screen">
-      <div className="container mx-auto px-6">
-        <div className="max-w-2xl mx-auto glass-panel rounded-3xl p-10 text-center">
-          <h1 className="text-3xl md:text-4xl font-display font-bold uppercase text-slate-900 dark:text-white mb-4">
-            {title}
-          </h1>
-          <p className="text-slate-600 dark:text-slate-400">{subtitle}</p>
-        </div>
-      </div>
+    <div className="min-h-screen bg-cinema-950 pt-32 text-center text-white">
+      <p>Loading account...</p>
     </div>
   );
 }
