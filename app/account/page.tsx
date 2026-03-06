@@ -6,13 +6,11 @@ export const dynamic = 'force-dynamic';
 
 export default async function AccountPage() {
   const supabase = createSupabaseServerClient();
-  const { data: { session } } = await supabase.auth.getSession();
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-  if (!session) {
+  if (authError || !user) {
     redirect('/login');
   }
-
-  const user = session.user;
 
   // Fetch profile
   const { data: profile } = await supabase
