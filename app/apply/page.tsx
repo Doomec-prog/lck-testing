@@ -10,9 +10,17 @@ export default async function ApplyPage() {
         redirect('/login?next=/apply');
     }
 
-    // TODO: Check if user already has an application or is a member
-    // const { data: profile } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
-    // if (profile?.status === 'member') redirect('/account');
+    const { data: application } = await supabase
+        .from('applications')
+        .select('status')
+        .eq('user_id', session.user.id)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+
+    if (application && application.status !== 'draft') {
+        redirect('/account');
+    }
 
     return (
         <div className="min-h-screen bg-cinema-900 pt-24 pb-12 px-4">

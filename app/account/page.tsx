@@ -28,8 +28,8 @@ export default async function AccountPage() {
     .limit(1)
     .single();
 
-  // If no profile AND no application -> go to wizard
-  if (!profile && !application) {
+  // If no application exists, OR if the application status is 'draft', redirect('/apply')
+  if (!application || application.status === 'draft') {
     redirect('/apply');
   }
 
