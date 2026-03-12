@@ -75,7 +75,7 @@ export const FeatureCards = () => {
                             </div>
 
                             {/* Title */}
-                            <h4 className="text-white text-sm font-semibold mb-1.5">{feature.title}</h4>
+                            <h4 className="text-slate-900 dark:text-white text-sm font-semibold mb-1.5">{feature.title}</h4>
 
                             {/* Description */}
                             <p className="text-slate-500 text-xs leading-relaxed">{feature.description}</p>

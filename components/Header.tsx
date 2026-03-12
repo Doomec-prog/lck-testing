@@ -1,12 +1,13 @@
 'use client';
 
 import { useState, useEffect, Fragment, useRef } from 'react';
-import { Menu, X, Sun, Moon, LogIn, Monitor, ChevronDown } from 'lucide-react';
+import { Menu, X, Sun, Moon, LogIn, LogOut, Monitor, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { NavItem, Language, Theme } from '@/types';
 import { translations } from '@/lib/translations';
 import { useGlobalContext } from '@/context/GlobalContext';
+import { createSupabaseBrowserClient } from '@/lib/supabase';
 
 interface HeaderProps {
   theme: Theme;
@@ -19,19 +20,25 @@ interface HeaderProps {
 export const Header = ({ theme, setTheme, isDark, lang, setLang }: HeaderProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
-  
+
   // Use global state for mobile menu
   const { isMobileMenuOpen, setIsMobileMenuOpen, hasSession } = useGlobalContext();
-  
+
   const themeMenuRef = useRef<HTMLDivElement>(null);
-  
+
   let pathname = '/';
   try { pathname = usePathname() || '/'; } catch (e) { console.warn('Header rendered outside Next.js Context'); }
+
+  const handleLogout = async () => {
+    const supabase = createSupabaseBrowserClient();
+    await supabase.auth.signOut();
+    window.location.href = '/';
+  };
 
   useEffect(() => {
     const handleScroll = () => { setIsScrolled(window.scrollY > 50); };
     window.addEventListener('scroll', handleScroll);
-    
+
     const handleClickOutside = (event: MouseEvent) => {
       if (themeMenuRef.current && !themeMenuRef.current.contains(event.target as Node)) {
         setIsThemeMenuOpen(false);
@@ -63,16 +70,16 @@ export const Header = ({ theme, setTheme, isDark, lang, setLang }: HeaderProps) 
   const renderLink = (item: NavItem) => {
     const isAnchor = item.href.startsWith('#');
     if (isAnchor) {
-       return (
-         <Link href={pathname === '/' ? item.href : `/${item.href}`} className="relative z-10" onClick={() => setIsMobileMenuOpen(false)}>
-           {item.label}
-         </Link>
-       );
+      return (
+        <Link href={pathname === '/' ? item.href : `/${item.href}`} className="relative z-10" onClick={() => setIsMobileMenuOpen(false)}>
+          {item.label}
+        </Link>
+      );
     }
     return (
-       <Link href={item.href} className="relative z-10" onClick={() => setIsMobileMenuOpen(false)}>
-         {item.label}
-       </Link>
+      <Link href={item.href} className="relative z-10" onClick={() => setIsMobileMenuOpen(false)}>
+        {item.label}
+      </Link>
     );
   };
 
@@ -87,7 +94,7 @@ export const Header = ({ theme, setTheme, isDark, lang, setLang }: HeaderProps) 
   return (
     <header className={`fixed top-4 left-0 w-full z-50 transition-all duration-500 flex justify-center pointer-events-none`}>
       <div className={`container mx-auto px-4 lg:px-6 flex justify-between items-center transition-all duration-500 pointer-events-auto ${isScrolled ? 'max-w-7xl' : 'max-w-full'}`}>
-        
+
         <div className={`glass-panel px-6 py-3 rounded-full flex items-center space-x-2 z-50 shrink-0 transition-all duration-500 ${isScrolled ? 'bg-opacity-90' : 'bg-opacity-40'}`}>
           <Link href="/" className="text-2xl font-display font-bold tracking-tighter uppercase group flex items-center">
             <span className="text-slate-900 dark:text-white group-hover:text-gold-500 transition-colors drop-shadow-sm">LCK</span>
@@ -107,34 +114,44 @@ export const Header = ({ theme, setTheme, isDark, lang, setLang }: HeaderProps) 
             href={authHref}
             className="flex items-center space-x-1 text-[10px] 2xl:text-xs font-bold text-amber-500 hover:text-amber-400 uppercase tracking-widest px-4 py-2 rounded-full hover:bg-amber-500/10 transition-colors whitespace-nowrap shrink-0"
           >
-             <LogIn size={12} />
-             <span>{authLabel}</span>
+            <LogIn size={12} />
+            <span>{authLabel}</span>
           </Link>
+          {hasSession && (
+            <button
+              onClick={handleLogout}
+              className="flex items-center space-x-1 text-[10px] 2xl:text-xs font-bold text-red-500 hover:text-red-400 uppercase tracking-widest pl-2 pr-4 py-2 rounded-full hover:bg-red-500/10 transition-colors whitespace-nowrap shrink-0"
+              title="Logout"
+            >
+              <LogOut size={12} />
+              <span>{lang === 'RU' ? 'ВЫЙТИ' : lang === 'KZ' ? 'ШЫҒУ' : 'LOGOUT'}</span>
+            </button>
+          )}
         </nav>
 
         <div className="hidden lg:flex items-center space-x-4 shrink-0 pointer-events-auto">
           <div className="flex items-center glass-panel rounded-full p-1.5">
-             {(['RU', 'KZ', 'EN'] as const).map((l) => (
-               <button 
-                  key={l} 
-                  type="button" 
-                  onClick={() => setLang(l)} 
-                  className={`cursor-pointer px-4 py-1.5 text-[10px] font-bold rounded-full transition-all duration-300 
-                    ${lang === l 
-                      ? 'bg-gold-500 text-white dark:text-black shadow-[0_2px_10px_rgba(212,175,55,0.4)]' 
-                      : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-black/5 dark:hover:bg-white/5'}
+            {(['RU', 'KZ', 'EN'] as const).map((l) => (
+              <button
+                key={l}
+                type="button"
+                onClick={() => setLang(l)}
+                className={`cursor-pointer px-4 py-1.5 text-[10px] font-bold rounded-full transition-all duration-300 
+                    ${lang === l
+                    ? 'bg-gold-500 text-white dark:text-black shadow-[0_2px_10px_rgba(212,175,55,0.4)]'
+                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-black/5 dark:hover:bg-white/5'}
                   `}
-               >
-                 {l}
-               </button>
-             ))}
+              >
+                {l}
+              </button>
+            ))}
           </div>
-          
+
           {/* THEME SELECTOR DROPDOWN (DESKTOP) */}
           <div className="relative" ref={themeMenuRef}>
-            <button 
-              onClick={() => setIsThemeMenuOpen(!isThemeMenuOpen)} 
-              type="button" 
+            <button
+              onClick={() => setIsThemeMenuOpen(!isThemeMenuOpen)}
+              type="button"
               className="cursor-pointer px-4 py-3 rounded-full glass-panel hover:text-gold-500 text-slate-700 dark:text-slate-300 transition-all hover:scale-105 active:scale-95 flex items-center space-x-2"
             >
               {currentThemeIcon}
@@ -167,7 +184,7 @@ export const Header = ({ theme, setTheme, isDark, lang, setLang }: HeaderProps) 
         {isMobileMenuOpen && (
           <div className="fixed inset-0 bg-paper-100 dark:bg-black z-40 flex flex-col items-center justify-center space-y-8 animate-fadeIn p-4 overflow-y-auto pointer-events-auto">
             <div className="w-full flex justify-center mb-8">
-               <div className="glass-panel px-6 py-2 rounded-full flex items-center space-x-2">
+              <div className="glass-panel px-6 py-2 rounded-full flex items-center space-x-2">
                 <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-display font-bold tracking-tighter uppercase flex items-center">
                   <span className="text-slate-900 dark:text-white">LCK</span>
                   <span className="text-gold-500">.KZ</span>
@@ -187,46 +204,51 @@ export const Header = ({ theme, setTheme, isDark, lang, setLang }: HeaderProps) 
 
             <div className="w-full max-w-xs h-px bg-slate-300 dark:bg-white/10 my-6"></div>
 
-            <Link href={authHref} className="text-xl font-display font-bold uppercase text-amber-500 hover:text-amber-400 transition-colors flex items-center">
-                <LogIn size={20} className="mr-2" /> {authLabel}
+            <Link href={authHref} onClick={() => setIsMobileMenuOpen(false)} className="text-xl font-display font-bold uppercase text-amber-500 hover:text-amber-400 transition-colors flex items-center">
+              <LogIn size={20} className="mr-2" /> {authLabel}
             </Link>
-            
+            {hasSession && (
+              <button onClick={() => { setIsMobileMenuOpen(false); handleLogout(); }} className="text-xl font-display font-bold uppercase text-red-500 hover:text-red-400 transition-colors flex items-center !mt-4">
+                <LogOut size={20} className="mr-2" /> {lang === 'RU' ? 'Выйти' : lang === 'KZ' ? 'Шығу' : 'Logout'}
+              </button>
+            )}
+
             {/* MOBILE THEME SWITCHER (GRID LAYOUT) */}
             <div className="w-full max-w-sm px-6 mt-8">
-               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center mb-4">Выберите тему</p>
-               <div className="grid grid-cols-3 gap-3">
-                 {themes.map(t => (
-                   <button
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center mb-4">Выберите тему</p>
+              <div className="grid grid-cols-3 gap-3">
+                {themes.map(t => (
+                  <button
                     key={t.id}
                     onClick={() => setTheme(t.id)}
                     className={`flex flex-col items-center justify-center p-4 rounded-2xl border transition-all duration-300
-                      ${theme === t.id 
-                        ? 'bg-gold-500 text-black border-gold-500 shadow-[0_0_15px_rgba(212,175,55,0.3)] scale-105' 
+                      ${theme === t.id
+                        ? 'bg-gold-500 text-black border-gold-500 shadow-[0_0_15px_rgba(212,175,55,0.3)] scale-105'
                         : 'bg-white/5 text-slate-400 border-white/5 hover:bg-white/10 hover:border-white/20'}
                     `}
-                   >
-                     <div className="mb-2">{t.icon}</div>
-                     <span className="text-[10px] font-bold uppercase tracking-wider">{t.shortLabel}</span>
-                   </button>
-                 ))}
-               </div>
+                  >
+                    <div className="mb-2">{t.icon}</div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider">{t.shortLabel}</span>
+                  </button>
+                ))}
+              </div>
             </div>
 
             <div className="flex items-center space-x-4 mt-8">
-               {(['RU', 'KZ', 'EN'] as const).map((l) => (
-                 <button 
-                  key={l} 
-                  type="button" 
-                  onClick={() => setLang(l)} 
+              {(['RU', 'KZ', 'EN'] as const).map((l) => (
+                <button
+                  key={l}
+                  type="button"
+                  onClick={() => setLang(l)}
                   className={`cursor-pointer px-4 py-2 text-xs font-bold rounded-full transition-all duration-300 
-                    ${lang === l 
-                      ? 'bg-gold-500 text-white dark:text-black shadow-[0_2px_10px_rgba(212,175,55,0.4)]' 
+                    ${lang === l
+                      ? 'bg-gold-500 text-white dark:text-black shadow-[0_2px_10px_rgba(212,175,55,0.4)]'
                       : 'text-slate-500 dark:text-slate-400 border border-transparent hover:border-white/10'}
                   `}
-                 >
-                   {l}
-                 </button>
-               ))}
+                >
+                  {l}
+                </button>
+              ))}
             </div>
 
           </div>
