@@ -20,6 +20,8 @@ export interface WizardData {
     filmography_links: string[];
     // Step 3: Documents
     documents_urls: Record<string, string>;
+    // Checkbox
+    consent_given: boolean;
 }
 
 const INITIAL_DATA: WizardData = {
@@ -31,6 +33,7 @@ const INITIAL_DATA: WizardData = {
     profession: '',
     filmography_links: [''],
     documents_urls: {},
+    consent_given: false,
 };
 
 const STEPS = [
@@ -184,7 +187,7 @@ export const WizardShell = () => {
                 {currentStep === 1 && <StepPersonal data={data} updateData={updateData} />}
                 {currentStep === 2 && <StepProfessional data={data} updateData={updateData} />}
                 {currentStep === 3 && <StepDocuments data={data} updateData={updateData} />}
-                {currentStep === 4 && <StepReview data={data} />}
+                {currentStep === 4 && <StepReview data={data} updateData={updateData} />}
 
                 {/* Error */}
                 {submitError && (
@@ -225,11 +228,13 @@ export const WizardShell = () => {
                         <button
                             type="button"
                             onClick={handleSubmit}
-                            disabled={isSubmitting}
-                            className="px-8 py-3 rounded-xl bg-emerald-500 text-white font-bold uppercase tracking-widest
-                         transition-all duration-300 hover:bg-emerald-400 hover:shadow-lg hover:shadow-emerald-500/20
-                         active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed
-                         flex items-center gap-3"
+                            disabled={isSubmitting || !data.consent_given}
+                            className={`px-8 py-3 rounded-xl font-bold uppercase tracking-widest
+                         transition-all duration-300 flex items-center gap-3 active:scale-95
+                         ${isSubmitting || !data.consent_given
+                                    ? 'bg-slate-500/50 text-slate-300 cursor-not-allowed opacity-50'
+                                    : 'bg-emerald-500 text-white hover:bg-emerald-400 hover:shadow-lg hover:shadow-emerald-500/20'
+                                }`}
                         >
                             {isSubmitting && (
                                 <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

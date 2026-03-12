@@ -5,6 +5,7 @@ import type { WizardData } from './WizardShell';
 
 interface Props {
     data: WizardData;
+    updateData: (fields: Partial<WizardData>) => void;
 }
 
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
@@ -25,7 +26,7 @@ const Field = ({ label, value }: { label: string; value?: string }) => (
     </div>
 );
 
-export const StepReview = ({ data }: Props) => {
+export const StepReview = ({ data, updateData }: Props) => {
     const filledLinks = data.filmography_links.filter(l => l.trim() !== '');
     const uploadedDocs = Object.keys(data.documents_urls);
 
@@ -92,12 +93,24 @@ export const StepReview = ({ data }: Props) => {
                 </Section>
             </div>
 
-            {/* Confirmation Note */}
-            <div className="rounded-xl border border-gold-500/20 bg-gold-500/5 p-4">
-                <p className="text-sm text-gold-400">
-                    ⚡ Нажимая «Отправить заявку», вы подтверждаете достоверность указанных данных
-                    и даёте согласие на их обработку.
-                </p>
+            {/* Confirmation Note with Checkbox */}
+            <div className="rounded-xl border border-white/10 bg-white/5 p-4 flex items-start gap-4 transition-colors hover:border-gold-500/30">
+                <div className="pt-1">
+                    <input
+                        type="checkbox"
+                        id="consent"
+                        className="w-5 h-5 rounded border-white/20 bg-white/5 text-gold-500 focus:ring-gold-500/50 cursor-pointer"
+                        checked={data.consent_given}
+                        onChange={(e) => updateData({ consent_given: e.target.checked })}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="consent" className="text-sm text-slate-300 cursor-pointer select-none block leading-relaxed">
+                        ⚡ Я даю согласие на сбор и обработку моих персональных данных,
+                        согласно законодательству Республики Казахстан.
+                        Я подтверждаю достоверность предоставленной информации.
+                    </label>
+                </div>
             </div>
         </div>
     );
