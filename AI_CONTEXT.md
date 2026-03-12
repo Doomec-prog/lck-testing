@@ -39,9 +39,10 @@
 1. ✅ WP API server-only refactor + caching
 2. ✅ Supabase SSR migration (from deprecated auth-helpers)
 3. ✅ Fix 500 errors (dynamic routes, SDK conflict)
-4. ✅ Application Wizard (4-step registration)
-5. ✅ Member Dashboard (status, profile, feature cards)
-6. ✅ Admin Panel (application management, approve/reject, security RLS)
+4. ✅ Application Wizard (4-step registration, 5MB upload limits, legal consent checkbox)
+5. ✅ Member Dashboard (status, profile, feature cards, loading skeletons)
+6. ✅ Admin Panel (application management, approve/reject, security RLS, pagination)
+7. ✅ UI/UX Polish (Light theme fixes, header logout, mobile menu toggle fixes)
 
 ## Upcoming Features (Placeholder Cards)
 - 🎬 Digital Member Card (QR-code)
