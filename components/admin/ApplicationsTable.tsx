@@ -43,6 +43,10 @@ export const ApplicationsTable = ({ applications, onStatusChange }: Props) => {
     const [search, setSearch] = useState('');
     const [selectedApp, setSelectedApp] = useState<ApplicationRow | null>(null);
 
+    // Pagination
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
+
     const filtered = applications.filter(app => {
         const matchesFilter = filter === 'all' || app.status === filter;
         const matchesSearch = !search || app.full_name?.toLowerCase().includes(search.toLowerCase())
@@ -50,6 +54,14 @@ export const ApplicationsTable = ({ applications, onStatusChange }: Props) => {
             || app.profession?.toLowerCase().includes(search.toLowerCase());
         return matchesFilter && matchesSearch;
     });
+
+    // Reset page on filter or search
+    React.useEffect(() => {
+        setCurrentPage(1);
+    }, [filter, search]);
+
+    const totalPages = Math.ceil(filtered.length / itemsPerPage);
+    const paginated = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
     return (
         <>
@@ -108,7 +120,7 @@ export const ApplicationsTable = ({ applications, onStatusChange }: Props) => {
                                     </td>
                                 </tr>
                             ) : (
-                                filtered.map(app => {
+                                paginated.map(app => {
                                     const badge = STATUS_BADGE[app.status] || STATUS_BADGE.draft;
                                     return (
                                         <tr

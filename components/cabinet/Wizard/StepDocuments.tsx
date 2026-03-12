@@ -32,6 +32,18 @@ export const StepDocuments = ({ data, updateData }: Props) => {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) throw new Error('Не авторизован');
 
+            // --- Валидация файла ---
+            const maxSize = 5 * 1024 * 1024; // 5 MB
+            if (file.size > maxSize) {
+                throw new Error('Файл слишком большой. Максимальный размер: 5 МБ.');
+            }
+
+            const validTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+            if (!validTypes.includes(file.type)) {
+                throw new Error('Недопустимый формат. Разрешены только JPG, PNG и PDF.');
+            }
+            // -----------------------
+
             const fileExt = file.name.split('.').pop();
             const filePath = `${user.id}/${docKey}.${fileExt}`;
 
@@ -76,7 +88,7 @@ export const StepDocuments = ({ data, updateData }: Props) => {
                     Документы
                 </h2>
                 <p className="text-slate-400 text-sm">
-                    Загрузите необходимые документы. Допустимые форматы: JPG, PNG, PDF (до 5 МБ).
+                    Загрузите необходимые документы. Допустимые форматы: JPG, PNG, PDF (не более 5 МБ).
                 </p>
             </div>
 
