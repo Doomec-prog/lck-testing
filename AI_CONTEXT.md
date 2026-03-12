@@ -51,5 +51,3 @@
 - ⚖️ Legal Support templates
 - 📦 Resources (logos, letterheads)
 
-## TODO
-- [ ] Удалить `/api/debug-auth` перед продакшеном (debug endpoint)
