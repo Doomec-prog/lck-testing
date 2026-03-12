@@ -1,6 +1,6 @@
 # Project Context & State
 
-> Last updated: 2026-02-26 | Branch: `main` | Status: **Production**
+> Last updated: 2026-03-12 | Branch: `main` | Status: **Production**
 
 ## Authentication
 - **Provider**: Supabase Auth (SSR via `@supabase/ssr`)
@@ -10,7 +10,7 @@
 
 ## AI Integration
 - **SDK**: `@google/generative-ai` v0.21.0
-- **Model**: `gemini-1.5-flash`
+- **Model**: `gemini-2.5-flash`
 - **Route**: `app/api/chat/route.ts` (force-dynamic)
 
 ## Personal Cabinet ✅ (Production)
@@ -30,7 +30,8 @@
 ## Database (Supabase)
 - **`profiles`** — extends `auth.users` (full_name, city, avatar_url, status, membership_id)
 - **`applications`** — wizard submissions (personal + professional + documents)
-- **RLS**: Enabled. Users can only read/write their own data.
+- **RLS**: Enabled. Users can only read/write their own data. Admins have full access.
+- **Storage RLS**: `cabinet-documents` — users upload to `user_id/` folder, admins can view all.
 - **Storage Buckets**: `cabinet-documents` (private), `avatars` (public)
 - **Schema**: `supabase_schema.sql` (reference only, already executed)
 
@@ -40,6 +41,7 @@
 3. ✅ Fix 500 errors (dynamic routes, SDK conflict)
 4. ✅ Application Wizard (4-step registration)
 5. ✅ Member Dashboard (status, profile, feature cards)
+6. ✅ Admin Panel (application management, approve/reject, security RLS)
 
 ## Upcoming Features (Placeholder Cards)
 - 🎬 Digital Member Card (QR-code)
@@ -48,4 +50,6 @@
 - 📅 Event Calendar
 - ⚖️ Legal Support templates
 - 📦 Resources (logos, letterheads)
- 
+
+## TODO
+- [ ] Удалить `/api/debug-auth` перед продакшеном (debug endpoint)
