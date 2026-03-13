@@ -63,26 +63,26 @@ export const GlobalProvider = ({
 
   const updateLang = useCallback(
     (nextLang: Language) => {
+      // 1. Set cookie SYNCHRONOUSLY so the server reads it on the next request
+      document.cookie = `lang=${nextLang}; path=/; max-age=31536000; samesite=lax`;
+      // 2. Update React state for client components
       setLang(nextLang);
+      // 3. Force Server Components to re-render with the new cookie value
       router.refresh();
     },
     [router]
   );
 
   useEffect(() => {
-    document.cookie = `lang=${lang}; path=/; max-age=31536000; samesite=lax`;
-  }, [lang]);
-
-  useEffect(() => {
     setHasSession(initialHasSession);
   }, [initialHasSession]);
 
   return (
-    <GlobalContext.Provider value={{ 
-      isDark, 
-      theme, 
-      setTheme, 
-      lang, 
+    <GlobalContext.Provider value={{
+      isDark,
+      theme,
+      setTheme,
+      lang,
       setLang: updateLang,
       hasSession,
       setHasSession,
