@@ -22,7 +22,7 @@ module.exports = {
           950: 'var(--color-cinema-950)',
         },
         paper: {
-           100: '#F0F0EE',
+          100: '#F0F0EE',
         }
       },
       animation: {
@@ -31,6 +31,8 @@ module.exports = {
         'grain': 'grain 6s steps(10) infinite',
         'bounce-slow': 'bounce 4s infinite',
         'breathing': 'breathing 6s ease-in-out infinite',
+        'wipe': 'wipe 0.6s ease-in-out forwards',
+        'scanline': 'scanline 0.6s ease-in-out forwards',
       },
       keyframes: {
         marquee: {
@@ -58,6 +60,18 @@ module.exports = {
         breathing: {
           '0%, 100%': { transform: 'scale(1)' },
           '50%': { transform: 'scale(1.05)' },
+        },
+        wipe: {
+          '0%': { transform: 'translateX(-100%)', opacity: '0' },
+          '30%': { opacity: '1' },
+          '70%': { opacity: '1' },
+          '100%': { transform: 'translateX(100%)', opacity: '0' },
+        },
+        scanline: {
+          '0%': { left: '-2px', opacity: '0' },
+          '10%': { opacity: '1' },
+          '90%': { opacity: '1' },
+          '100%': { left: '100%', opacity: '0' },
         }
       }
     },

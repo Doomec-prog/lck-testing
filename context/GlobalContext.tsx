@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useTransition, ReactNode, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Language, Theme } from '@/types';
 
@@ -10,6 +10,7 @@ interface GlobalContextType {
   setTheme: (theme: Theme) => void;
   lang: Language;
   setLang: (lang: Language) => void;
+  isLangSwitching: boolean;
   hasSession: boolean;
   setHasSession: (hasSession: boolean) => void;
   isMobileMenuOpen: boolean;
@@ -28,6 +29,7 @@ export const GlobalProvider = ({
   initialHasSession?: boolean;
 }) => {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
   const [theme, setTheme] = useState<Theme>('dark');
   const [lang, setLang] = useState<Language>(initialLang);
   const [hasSession, setHasSession] = useState<boolean>(initialHasSession);
@@ -67,10 +69,12 @@ export const GlobalProvider = ({
       document.cookie = `lang=${nextLang}; path=/; max-age=31536000; samesite=lax`;
       // 2. Update React state for client components
       setLang(nextLang);
-      // 3. Force Server Components to re-render with the new cookie value
-      router.refresh();
+      // 3. Force Server Components to re-render inside a transition (enables isPending)
+      startTransition(() => {
+        router.refresh();
+      });
     },
-    [router]
+    [router, startTransition]
   );
 
   useEffect(() => {
@@ -84,6 +88,7 @@ export const GlobalProvider = ({
       setTheme,
       lang,
       setLang: updateLang,
+      isLangSwitching: isPending,
       hasSession,
       setHasSession,
       isMobileMenuOpen,
