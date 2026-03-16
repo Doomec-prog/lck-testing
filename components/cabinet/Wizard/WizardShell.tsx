@@ -55,7 +55,32 @@ export const WizardShell = () => {
         setData(prev => ({ ...prev, ...fields }));
     }, []);
 
-    const nextStep = () => setCurrentStep(prev => Math.min(prev + 1, 4));
+    // Step validation: returns true if the current step's required fields are filled
+    const isStepValid = (step: number): boolean => {
+        switch (step) {
+            case 1:
+                return (
+                    data.full_name.trim() !== '' &&
+                    data.city.trim() !== '' &&
+                    data.phone.trim() !== '' &&
+                    data.email.trim() !== ''
+                );
+            case 2:
+                return data.profession.trim() !== '';
+            case 3: // Documents — all optional
+                return true;
+            case 4: // Review — validated by consent checkbox
+                return true;
+            default:
+                return true;
+        }
+    };
+
+    const nextStep = () => {
+        if (isStepValid(currentStep)) {
+            setCurrentStep(prev => Math.min(prev + 1, 4));
+        }
+    };
     const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 1));
 
     const handleSubmit = async () => {
@@ -215,15 +240,26 @@ export const WizardShell = () => {
                     </button>
 
                     {currentStep < 4 ? (
-                        <button
-                            type="button"
-                            onClick={nextStep}
-                            className="px-8 py-3 rounded-xl bg-gold-500 text-black font-bold uppercase tracking-widest
-                         transition-all duration-300 hover:bg-gold-400 hover:shadow-lg hover:shadow-gold-500/20
-                         active:scale-95"
-                        >
-                            Далее →
-                        </button>
+                        <div className="flex flex-col items-end gap-2">
+                            <button
+                                type="button"
+                                onClick={nextStep}
+                                disabled={!isStepValid(currentStep)}
+                                className={`px-8 py-3 rounded-xl font-bold uppercase tracking-widest
+                                 transition-all duration-300 active:scale-95
+                                 ${!isStepValid(currentStep)
+                                    ? 'bg-gold-500/30 text-gold-200/50 cursor-not-allowed opacity-50'
+                                    : 'bg-gold-500 text-black hover:bg-gold-400 hover:shadow-lg hover:shadow-gold-500/20'
+                                 }`}
+                            >
+                                Далее →
+                            </button>
+                            {!isStepValid(currentStep) && (
+                                <span className="text-xs text-slate-500">
+                                    Заполните обязательные поля *
+                                </span>
+                            )}
+                        </div>
                     ) : (
                         <button
                             type="button"
