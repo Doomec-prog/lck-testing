@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { FadeIn } from '../ui/FadeIn';
 import { SpotlightCard } from '../ui/SpotlightCard';
@@ -54,7 +55,7 @@ export const NewsPage = async ({ lang }: NewsPageProps) => {
           {posts.map((item, idx) => (
             <FadeIn key={item.id} delay={idx * 50}>
               <SpotlightCard className="rounded-2xl glass-card h-full group cursor-pointer flex flex-col">
-                <a href={item.link} target="_blank" rel="noopener noreferrer" className="flex flex-col h-full">
+                <Link href={item.link} className="flex flex-col h-full">
                   <div className="overflow-hidden aspect-video relative rounded-t-2xl">
                     <div className="absolute inset-0 bg-cinema-950/20 group-hover:bg-transparent transition-colors z-10"></div>
                     <img src={item.image} alt={item.title} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 grayscale group-hover:grayscale-0" />
@@ -73,7 +74,7 @@ export const NewsPage = async ({ lang }: NewsPageProps) => {
                       </span>
                     </div>
                   </div>
-                </a>
+                </Link>
               </SpotlightCard>
             </FadeIn>
           ))}
@@ -82,3 +83,4 @@ export const NewsPage = async ({ lang }: NewsPageProps) => {
     </div>
   );
 };
+

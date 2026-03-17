@@ -6,6 +6,7 @@ const nextConfig = {
       { protocol: 'https', hostname: 'images.unsplash.com' },
       { protocol: 'https', hostname: 'assets.mixkit.co' },
       { protocol: 'https', hostname: 'lck.kz' },
+      { protocol: 'https', hostname: 'back.lck.kz' },
       { protocol: 'https', hostname: 'secure.gravatar.com' },
     ],
   },

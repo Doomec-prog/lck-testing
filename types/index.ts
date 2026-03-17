@@ -8,6 +8,7 @@ export interface NewsItem {
   title: string;
   image: string;
   link: string;
+  slug?: string;
   date?: string;
   excerpt?: string;
 }
@@ -29,6 +30,7 @@ export type Theme = 'light' | 'dark' | 'noir';
 export interface WPPost {
   id: number;
   date: string;
+  slug: string;
   link: string;
   title: { rendered: string };
   content: { rendered: string };
