@@ -49,7 +49,11 @@ export const StatusCard = ({ status, submittedAt }: Props) => {
     const config = STATUS_CONFIG[status] || STATUS_CONFIG.submitted;
 
     return (
-        <div className={`rounded-2xl border p-6 ${config.bg}`}>
+        <div className={`glass-panel rounded-3xl border p-8 ${config.bg} shadow-[0_8px_30px_rgba(0,0,0,0.4)] relative overflow-hidden group`}>
+            {/* Subtle pulse for pending statuses */}
+            {(status === 'submitted' || status === 'changes_requested') && (
+                <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-[40px] animate-pulse pointer-events-none" />
+            )}
             <div className="flex items-start gap-4">
                 {/* Icon */}
                 <div className="text-3xl flex-shrink-0 mt-1">{config.icon}</div>
