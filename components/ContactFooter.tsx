@@ -113,18 +113,28 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({ lang }) => {
           </div>
         </div>
         <FadeIn delay={300}>
-          <div className={`${darkGlassCard} rounded-[2rem] p-4 flex flex-col md:flex-row items-center justify-between gap-6`}>
-            <div className="flex-1 w-full md:w-auto px-4">
-              <h4 className="text-slate-900 dark:text-white font-bold uppercase tracking-wider text-sm mb-1">{t.join.title}</h4>
-              <p className="text-slate-600 dark:text-slate-500 text-xs">{t.join.desc}</p>
-            </div>
-            <div className="flex w-full md:w-auto bg-black/5 dark:bg-[#151515] rounded-xl p-1 shadow-inner dark:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.8)]">
-              <input type="email" placeholder="Email..." className="bg-transparent border-none outline-none text-slate-900 dark:text-white px-4 py-2 w-full md:w-64 placeholder-slate-500 dark:placeholder-slate-600" />
-              <button className="bg-black/10 dark:bg-white/10 hover:bg-gold-500 text-slate-800 dark:text-white hover:text-black rounded-lg px-6 py-2 font-bold uppercase text-xs transition-all tracking-wider">OK</button>
-            </div>
-            <div className="text-slate-600 text-[10px] font-mono uppercase tracking-widest px-4 md:border-l border-white/10 md:text-right">
-              <p>&copy; 2025 LCK.KZ</p>
-              <p>{t.copyright} <span className="text-gold-500">Centurion Films</span></p>
+          <div className="border-t border-white/10 bg-[#0a0a0a] rounded-none -mx-6 px-6 py-8">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6 max-w-6xl mx-auto">
+              {/* Brand Identity */}
+              <div className="flex items-center gap-4">
+                <span className="text-2xl font-display font-bold tracking-tighter uppercase">
+                  <span className="text-white">LCK</span>
+                  <span className="text-gold-500">.KZ</span>
+                </span>
+                <div className="hidden md:block w-px h-8 bg-white/10" />
+                <span className="hidden md:block text-white/40 text-xs font-medium uppercase tracking-widest">
+                  Лига Кинематографистов Казахстана
+                </span>
+              </div>
+              {/* Mobile subtitle */}
+              <p className="md:hidden text-white/40 text-xs font-medium uppercase tracking-widest text-center">
+                Лига Кинематографистов Казахстана
+              </p>
+              {/* Copyright & Credits */}
+              <div className="text-white/30 text-[10px] font-mono uppercase tracking-widest text-center md:text-right space-y-1">
+                <p>&copy; 2026 LCK.KZ</p>
+                <p>{t.copyright} <span className="text-gold-500/70">Centurion Films</span></p>
+              </div>
             </div>
           </div>
         </FadeIn>
