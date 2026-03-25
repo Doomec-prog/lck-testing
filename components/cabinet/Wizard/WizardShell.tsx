@@ -208,7 +208,9 @@ export const WizardShell = () => {
             </div>
 
             {/* Step Content */}
-            <div className="glass-panel rounded-3xl p-8 md:p-12">
+            <div className="glass-panel rounded-3xl p-8 md:p-12 relative overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.5)]">
+                {/* Decorative spotlight for the active step area */}
+                <div className="absolute -top-[150px] left-1/2 -translate-x-1/2 w-[300px] h-[300px] bg-gold-500/10 rounded-full blur-[80px] pointer-events-none" />
                 {currentStep === 1 && <StepPersonal data={data} updateData={updateData} />}
                 {currentStep === 2 && <StepProfessional data={data} updateData={updateData} />}
                 {currentStep === 3 && <StepDocuments data={data} updateData={updateData} />}
