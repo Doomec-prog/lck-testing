@@ -2,8 +2,12 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Turnstile } from '@marsidev/react-turnstile';
 import { createSupabaseBrowserClient } from '@/lib/supabase';
 import { Language } from '@/types';
+
+const TURNSTILE_SITE_KEY =
+  process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'; // dummy success key for dev
 
 const copy: Record<Language, { title: string; subtitle: string; email: string; submit: string; success: string; error: string }> = {
   RU: {
@@ -44,11 +48,15 @@ export const LoginForm = ({ lang }: LoginFormProps) => {
   const supabase = hasSupabaseEnv ? createSupabaseBrowserClient() : null;
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
   const t = copy[lang];
 
+  const canSubmit = hasSupabaseEnv && !!turnstileToken && status !== 'loading';
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!canSubmit) return;
     setStatus('loading');
 
     if (!supabase) {
@@ -91,10 +99,25 @@ export const LoginForm = ({ lang }: LoginFormProps) => {
             placeholder="email@example.com"
           />
         </div>
+
+        {/* Cloudflare Turnstile */}
+        <div className="flex justify-center">
+          <Turnstile
+            siteKey={TURNSTILE_SITE_KEY}
+            onSuccess={(token) => setTurnstileToken(token)}
+            onError={() => setTurnstileToken(null)}
+            onExpire={() => setTurnstileToken(null)}
+            options={{
+              theme: 'dark',
+              size: 'flexible',
+            }}
+          />
+        </div>
+
         <button
           type="submit"
-          disabled={status === 'loading' || !hasSupabaseEnv}
-          className="w-full rounded-xl bg-gold-500 text-black font-bold uppercase tracking-widest py-3 transition hover:bg-gold-400 disabled:opacity-70 flex items-center justify-center space-x-2"
+          disabled={!canSubmit}
+          className="w-full rounded-xl bg-gold-500 text-black font-bold uppercase tracking-widest py-3 transition hover:bg-gold-400 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
         >
           {status === 'loading' && (
             <svg className="animate-spin h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -120,3 +143,4 @@ export const LoginForm = ({ lang }: LoginFormProps) => {
     </div>
   );
 };
+

@@ -3,7 +3,7 @@
 > Last updated: 2026-03-31 | Branch: `main` | Status: **Production**
 
 ## Tech Stack
-- **Framework**: Next.js 14 (App Router, Server Components)
+- **Framework**: Next.js 16 (App Router, Server Components)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS + `@tailwindcss/typography`
 - **Database**: Supabase (Postgres, Auth, Storage, RLS)
@@ -17,6 +17,10 @@
 - **Callback**: `app/auth/callback/route.ts` — exchanges code for session, redirects to `/account`
 - **Middleware**: `middleware.ts` — auto-refreshes session tokens
 - **Login**: `app/login/page.tsx` + `components/auth/LoginForm.tsx`
+- **Anti-Spam**: Cloudflare Turnstile (`@marsidev/react-turnstile`)
+  - Site key: `NEXT_PUBLIC_TURNSTILE_SITE_KEY` (falls back to Cloudflare dummy success key)
+  - Submit button disabled until Turnstile token is generated
+  - Dark theme, flexible size
 
 ## Smart Routing
 - **Dashboard** (`app/account/page.tsx`): Redirects to `/apply` if no application or status is `draft`
@@ -104,6 +108,7 @@
 16. ✅ Profession List Expansion (35 items, 8 departments, optgroup)
 17. ✅ Footer Redesign (cinematic end-credits, removed email form)
 18. ✅ Workspace Cleanup (removed legacy Vite files, consolidated AI context)
+19. ✅ Security Update (Next.js 16, React 19, Cloudflare Turnstile anti-spam on login)
 
 ## Upcoming Features (Placeholder Cards)
 - 🎬 Digital Member Card (QR-code)
