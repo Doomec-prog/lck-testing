@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Instagram, MessageCircle, MapPin, Mail, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { FadeIn } from './ui/FadeIn';
 import { Language } from '@/types';
 import { translations } from '@/lib/translations';
@@ -75,32 +75,10 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({ lang }) => {
                   <span className="w-2 h-2 rounded-full bg-gold-500 mr-3 animate-pulse"></span>
                   {t.contacts.title}
                 </h3>
-                <div className="space-y-8">
-                  <a href="#" className="flex items-start space-x-6 group">
-                    <div className="p-4 rounded-2xl bg-black/5 dark:bg-[#151515] shadow-sm dark:shadow-[5px_5px_10px_rgba(0,0,0,0.5),-5px_-5px_10px_rgba(255,255,255,0.05)] border border-black/5 dark:border-white/5 group-hover:border-gold-500/30 transition-all">
-                      <MapPin size={24} className="text-slate-500 dark:text-slate-400 group-hover:text-gold-500 transition-colors" />
-                    </div>
-                    <div className="pt-1">
-                      <p className="text-xs text-slate-500 uppercase tracking-widest font-bold mb-1">Адрес</p>
-                      <span className="text-lg text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-white transition-colors leading-tight block">{t.contacts.address}</span>
-                    </div>
-                  </a>
-                  <a href="mailto:leaguecinemakz@gmail.com" className="flex items-start space-x-6 group">
-                    <div className="p-4 rounded-2xl bg-black/5 dark:bg-[#151515] shadow-sm dark:shadow-[5px_5px_10px_rgba(0,0,0,0.5),-5px_-5px_10px_rgba(255,255,255,0.05)] border border-black/5 dark:border-white/5 group-hover:border-gold-500/30 transition-all">
-                      <Mail size={24} className="text-slate-500 dark:text-slate-400 group-hover:text-gold-500 transition-colors" />
-                    </div>
-                    <div className="pt-1">
-                      <p className="text-xs text-slate-500 uppercase tracking-widest font-bold mb-1">Email</p>
-                      <span className="text-lg text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-white transition-colors leading-tight block">leaguecinemakz@gmail.com</span>
-                    </div>
-                  </a>
-                </div>
-                <div className="flex space-x-4 mt-12">
-                  {[Instagram, MessageCircle].map((Icon, i) => (
-                    <a key={i} href="#" className="w-14 h-14 rounded-full bg-black/5 dark:bg-[#151515] flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-gold-500 hover:bg-black/10 transition-all shadow-sm dark:shadow-[5px_5px_10px_rgba(0,0,0,0.5),-5px_-5px_10px_rgba(255,255,255,0.05)] dark:hover:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.8)] active:scale-95">
-                      <Icon size={24} />
-                    </a>
-                  ))}
+                <div className="space-y-4">
+                  {/* Minimized contact info as per redesign */}
+                  <p className="text-lg text-slate-800 dark:text-slate-200"><span className="text-xs text-slate-500 uppercase tracking-widest font-bold mr-2">Адрес:</span>{t.contacts.address}</p>
+                  <p className="text-lg text-slate-800 dark:text-slate-200"><span className="text-xs text-slate-500 uppercase tracking-widest font-bold mr-2">Email:</span>leaguecinemakz@gmail.com</p>
                 </div>
               </div>
               <div className="pl-0 lg:pl-10 grid grid-cols-2 gap-4 text-sm font-medium text-slate-600 dark:text-slate-500 border-t border-black/10 dark:border-white/5 pt-8">
