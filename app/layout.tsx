@@ -22,7 +22,7 @@ export default async function RootLayout({
 }: {
   children: ReactNode;
 }) {
-  const initialLang = getServerLanguage();
+  const initialLang = await getServerLanguage();
   const hasSupabaseEnv = Boolean(
     process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   );
@@ -30,7 +30,7 @@ export default async function RootLayout({
 
   if (hasSupabaseEnv) {
     try {
-      const supabase = createSupabaseServerClient();
+      const supabase = await createSupabaseServerClient();
       const { data } = await supabase.auth.getSession();
       session = data.session;
     } catch (error) {

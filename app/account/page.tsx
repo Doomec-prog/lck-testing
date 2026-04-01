@@ -5,7 +5,7 @@ import { StatusCard, ProfileCard, FeatureCards } from '@/components/cabinet/Dash
 export const dynamic = 'force-dynamic';
 
 export default async function AccountPage() {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
 
   if (authError || !user) {

@@ -3,8 +3,8 @@ import { MembersPage as MembersPageComponent } from '../../components/pages/Memb
 import { ContactFooter } from '../../components/ContactFooter';
 import { getServerLanguage } from '@/lib/getLanguage';
 
-export default function MembersRoute() {
-  const lang = getServerLanguage();
+export default async function MembersRoute() {
+  const lang = await getServerLanguage();
 
   return (
     <div className="relative z-10">

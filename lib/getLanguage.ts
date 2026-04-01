@@ -22,11 +22,14 @@ const mapBrowserLanguage = (value?: string | null): Language | null => {
   return null;
 };
 
-export const getServerLanguage = (): Language => {
-  const cookieLang = normalizeLanguage(cookies().get('lang')?.value);
+export const getServerLanguage = async (): Promise<Language> => {
+  const cookieStore = await cookies();
+  const headerStore = await headers();
+
+  const cookieLang = normalizeLanguage(cookieStore.get('lang')?.value);
   if (cookieLang) return cookieLang;
 
-  const headerLang = mapBrowserLanguage(headers().get('accept-language'));
+  const headerLang = mapBrowserLanguage(headerStore.get('accept-language'));
   if (headerLang) return headerLang;
 
   return 'RU';

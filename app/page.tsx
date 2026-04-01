@@ -12,8 +12,8 @@ import { ContactFooter } from '../components/ContactFooter';
 import { CinematicMist } from '../components/ui/CinematicMist';
 import { getServerLanguage } from '@/lib/getLanguage';
 
-export default function Home() {
-  const lang = getServerLanguage();
+export default async function Home() {
+  const lang = await getServerLanguage();
 
   return (
     <div className="relative z-10">

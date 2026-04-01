@@ -2,8 +2,8 @@ import React from 'react';
 import { LoginForm } from '@/components/auth/LoginForm';
 import { getServerLanguage } from '@/lib/getLanguage';
 
-export default function LoginPage() {
-  const lang = getServerLanguage();
+export default async function LoginPage() {
+  const lang = await getServerLanguage();
 
   return (
     <div className="relative z-10 pt-32 pb-20 min-h-screen">

@@ -5,7 +5,7 @@ import { AdminDashboard } from './AdminDashboard';
 export const dynamic = 'force-dynamic';
 
 export default async function AdminPage() {
-    const supabase = createSupabaseServerClient();
+    const supabase = await createSupabaseServerClient();
 
     // Use getUser() instead of getSession() — it verifies the JWT server-side
     // getSession() only reads cookies and is unreliable in Server Components

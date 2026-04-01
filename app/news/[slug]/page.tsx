@@ -12,7 +12,7 @@ interface PageProps {
 }
 
 export default async function NewsPostPage({ params }: PageProps) {
-  const lang = getServerLanguage();
+  const lang = await getServerLanguage();
   const result = await wpApi.getPostBySlug(params.slug, lang);
 
   if (!result) {

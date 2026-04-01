@@ -3,8 +3,8 @@ import { NewsPage as NewsPageComponent } from '../../components/pages/NewsPage';
 import { ContactFooter } from '../../components/ContactFooter';
 import { getServerLanguage } from '@/lib/getLanguage';
 
-export default function NewsRoute() {
-  const lang = getServerLanguage();
+export default async function NewsRoute() {
+  const lang = await getServerLanguage();
   
   return (
     <div className="relative z-10">
