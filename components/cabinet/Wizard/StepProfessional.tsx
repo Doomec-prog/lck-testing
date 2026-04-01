@@ -8,12 +8,39 @@ interface Props {
     updateData: (fields: Partial<WizardData>) => void;
 }
 
-const PROFESSIONS = [
-    'Режиссёр', 'Продюсер', 'Сценарист', 'Оператор', 'Монтажёр',
-    'Звукорежиссёр', 'Художник-постановщик', 'Актёр / Актриса',
-    'Каскадёр', 'Композитор', 'Аниматор', 'VFX-художник',
-    'Кастинг-директор', 'Второй режиссёр', 'Гримёр', 'Костюмер',
-    'Кинокритик', 'Киновед', 'Студент киношколы', 'Другое',
+const PROFESSION_GROUPS = [
+    {
+        label: 'Режиссура и сценарий',
+        items: ['Режиссер-постановщик', 'Второй режиссер', 'Сценарист', 'Скрипт-супервайзер', 'Шоураннер'],
+    },
+    {
+        label: 'Камера и свет',
+        items: ['Оператор-постановщик', 'Камерамен', 'Фокус-пуллер', 'Механик камеры', 'Гафер'],
+    },
+    {
+        label: 'Звук и музыка',
+        items: ['Звукорежиссер', 'Бум-оператор', 'Саунд-дизайнер', 'Композитор'],
+    },
+    {
+        label: 'Продюсирование',
+        items: ['Генеральный продюсер', 'Исполнительный продюсер', 'Линейный продюсер', 'Кастинг-директор', 'Локейшн-менеджер'],
+    },
+    {
+        label: 'Художественный департамент',
+        items: ['Художник-постановщик', 'Декоратор', 'Бутафор', 'Реквизитор', 'Художник по костюмам', 'Художник по гриму'],
+    },
+    {
+        label: 'Актерское мастерство и трюки',
+        items: ['Актер', 'Каскадер', 'Постановщик трюков'],
+    },
+    {
+        label: 'Постпродакшн и VFX',
+        items: ['Режиссер монтажа', 'Редактор', 'Колорист', 'Аниматор', 'CGI-художник', 'VFX-супервайзер'],
+    },
+    {
+        label: 'Другое',
+        items: ['Другое'],
+    },
 ];
 
 export const StepProfessional = ({ data, updateData }: Props) => {
@@ -58,8 +85,12 @@ export const StepProfessional = ({ data, updateData }: Props) => {
                     style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23666'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 12px center', backgroundSize: '20px' }}
                 >
                     <option value="" className="bg-cinema-900">Выберите специальность</option>
-                    {PROFESSIONS.map(p => (
-                        <option key={p} value={p} className="bg-cinema-900">{p}</option>
+                    {PROFESSION_GROUPS.map(group => (
+                        <optgroup key={group.label} label={group.label}>
+                            {group.items.map(p => (
+                                <option key={p} value={p} className="bg-cinema-900">{p}</option>
+                            ))}
+                        </optgroup>
                     ))}
                 </select>
             </div>

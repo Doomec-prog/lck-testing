@@ -92,7 +92,7 @@ class WPApiService {
 
   async getNews(lang: Language, perPage = 4): Promise<NewsItem[]> {
     try {
-      const posts = await this.fetch<WPPost[]>('rt-portfolios', { per_page: perPage });
+      const posts = await this.fetch<WPPost[]>('posts', { per_page: perPage });
       return posts.map(p => normalizePost(p, lang));
     } catch (e) {
       return [];

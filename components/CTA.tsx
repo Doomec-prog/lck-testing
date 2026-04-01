@@ -1,4 +1,6 @@
 import React from 'react';
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 import { FadeIn } from './ui/FadeIn';
 import { Language } from '@/types';
 import { translations } from '@/lib/translations';
@@ -36,11 +38,19 @@ export const CTA: React.FC<CTAProps> = ({ lang }) => {
         </FadeIn>
         
         <FadeIn delay={400}>
-          <button className="px-12 py-5 bg-gold-500 hover:bg-gold-400 text-cinema-950 font-bold uppercase tracking-widest text-lg rounded shadow-[0_0_30px_rgba(245,158,11,0.3)] hover:shadow-[0_0_50px_rgba(245,158,11,0.6)] transition-all transform hover:-translate-y-1 border border-gold-400">
+          <Link
+            href="/login"
+            className="inline-flex items-center gap-3 group/btn
+                       px-12 py-5 bg-gold-500 hover:bg-gold-400 text-cinema-950
+                       font-bold uppercase tracking-widest text-lg rounded
+                       shadow-[0_0_30px_rgba(245,158,11,0.3)] hover:shadow-[0_0_50px_rgba(245,158,11,0.6)]
+                       transition-all transform hover:-translate-y-1 border border-gold-400"
+          >
             {t.btn}
-          </button>
+            <ArrowRight size={20} className="group-hover/btn:translate-x-1 transition-transform" />
+          </Link>
         </FadeIn>
       </div>
     </section>
   );
-};
+};
