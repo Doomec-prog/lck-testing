@@ -17,7 +17,8 @@ const CITIES = [
 
 export const StepPersonal = ({ data, updateData }: Props) => {
     return (
-        <div className="space-y-8">
+        <div className="space-y-8 border-4 border-red-500 bg-red-50/10 p-4 rounded-2xl relative">
+            <div className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold px-2 py-1">STEP PERSONAL MOUNTED</div>
             {/* Header */}
             <div>
                 <h2 className="text-2xl md:text-3xl font-display uppercase text-white mb-2">
