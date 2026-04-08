@@ -155,11 +155,6 @@ export const WizardShell = () => {
 
     return (
         <div>
-            {/* DEBUG BLOCK */}
-            <div className="bg-red-500 text-white font-bold p-4 rounded-xl mb-4 border-4 border-red-900">
-                WIZARD SHELL MOUNTED. Current Step: {currentStep}
-            </div>
-            
             {/* Progress Bar */}
             <div className="mb-10">
                 <div className="flex items-center justify-between max-w-lg mx-auto">
