@@ -26,11 +26,7 @@ export async function POST(request: NextRequest) {
 
     // Initialize Gemini AI (Standard SDK)
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash",
-      systemInstruction: systemInstruction
-    });
-
+    
     // Validate and format history
     const formattedHistory = Array.isArray(history)
       ? history
@@ -41,19 +37,50 @@ export async function POST(request: NextRequest) {
         }))
       : [];
 
-    const chat = model.startChat({
-      history: formattedHistory,
-      generationConfig: {
-        temperature: 0.7,
-      },
-    });
+    let text = "";
 
-    const result = await chat.sendMessage(String(message));
-    const response = await result.response;
-    const text = response.text();
+    // 1. Try Primary Model (gemini-2.0-flash)
+    try {
+      const model = genAI.getGenerativeModel({
+        model: "gemini-2.0-flash",
+        systemInstruction: systemInstruction
+      });
+
+      const chat = model.startChat({
+        history: formattedHistory,
+        generationConfig: { temperature: 0.7 },
+      });
+
+      const result = await chat.sendMessage(String(message));
+      text = result.response.text();
+    } catch (primaryError: any) {
+      console.warn(`[API] Primary model gemini-2.0-flash failed:`, primaryError.message);
+      
+      // 2. Fallback to older stable model (gemini-1.5-flash) if 503 or 429
+      try {
+        const fallbackModel = genAI.getGenerativeModel({
+          model: "gemini-1.5-flash",
+          systemInstruction: systemInstruction
+        });
+
+        const fallbackChat = fallbackModel.startChat({
+          history: formattedHistory,
+          generationConfig: { temperature: 0.7 },
+        });
+
+        const result = await fallbackChat.sendMessage(String(message));
+        text = result.response.text();
+      } catch (fallbackError: any) {
+        console.error(`[API] Fallback model gemini-1.5-flash also failed:`, fallbackError.message);
+        // 3. Graceful UI degradation
+        return NextResponse.json({ 
+          text: "К сожалению, серверы искусственного интеллекта сейчас испытывают высокую нагрузку. Пожалуйста, попробуйте задать ваш вопрос через пару минут." 
+        });
+      }
+    }
 
     if (!text) {
-      throw new Error('Empty response from Gemini API');
+      throw new Error('Empty response from Gemini APIs');
     }
 
     return NextResponse.json({ text });
