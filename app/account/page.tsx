@@ -42,21 +42,6 @@ export default async function AccountPage() {
     <div className="min-h-screen bg-cinema-950 pt-24 pb-16 px-4 relative z-10">
       <div className="max-w-4xl mx-auto space-y-8 relative z-10">
         
-        {/* DEBUG BLOCK - We will remove this later */}
-        <div className="bg-black/50 p-6 rounded-2xl border border-red-500 overflow-auto">
-          <h2 className="text-red-500 font-bold mb-4">DEBUG DATA:</h2>
-          <pre className="text-xs text-green-400 font-mono">
-{JSON.stringify({ 
-  authUserId: user.id, 
-  authEmail: user.email,
-  profileNotFound: !profile,
-  profileStatus: profile?.status,
-  appNotFound: !application,
-  appStatus: application?.status,
-  appData: application 
-}, null, 2)}
-          </pre>
-        </div>
 
         {/* Header */}
         <div className="flex items-center justify-between">
