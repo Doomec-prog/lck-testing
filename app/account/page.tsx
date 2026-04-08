@@ -39,8 +39,8 @@ export default async function AccountPage() {
   const isMember = profile?.status === 'member' || profile?.status === 'admin';
 
   return (
-    <div className="min-h-screen bg-cinema-950 pt-24 pb-16 px-4">
-      <div className="max-w-4xl mx-auto space-y-8">
+    <div className="min-h-screen bg-cinema-950 pt-24 pb-16 px-4 relative z-10">
+      <div className="max-w-4xl mx-auto space-y-8 relative z-10">
         
         {/* DEBUG BLOCK - We will remove this later */}
         <div className="bg-black/50 p-6 rounded-2xl border border-red-500 overflow-auto">

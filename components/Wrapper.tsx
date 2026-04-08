@@ -17,7 +17,9 @@ export const Wrapper = ({ children }: { children?: ReactNode }) => {
 
       <Header theme={theme} setTheme={setTheme} isDark={isDark} lang={lang} setLang={setLang} />
 
-      {children}
+      <main className="relative z-10 w-full flex-1">
+        {children}
+      </main>
 
       <div className="relative z-50">
         <Chatbot lang={lang} />
