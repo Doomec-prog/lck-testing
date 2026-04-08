@@ -17,7 +17,7 @@ const CITIES = [
 
 export const StepPersonal = ({ data, updateData }: Props) => {
     return (
-        <div className="space-y-8">
+        <div className="space-y-8 relative z-10">
             {/* Header */}
             <div>
                 <h2 className="text-2xl md:text-3xl font-display uppercase text-white mb-2">

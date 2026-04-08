@@ -208,7 +208,7 @@ export const WizardShell = () => {
             </div>
 
             {/* Step Content */}
-            <div className="glass-panel rounded-3xl p-8 md:p-12">
+            <div className="glass-panel rounded-3xl p-8 md:p-12 relative z-10">
                 {currentStep === 1 && <StepPersonal data={data} updateData={updateData} />}
                 {currentStep === 2 && <StepProfessional data={data} updateData={updateData} />}
                 {currentStep === 3 && <StepDocuments data={data} updateData={updateData} />}
