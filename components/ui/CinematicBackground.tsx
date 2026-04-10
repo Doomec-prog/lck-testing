@@ -13,16 +13,38 @@ export const CinematicBackground: React.FC<CinematicBackgroundProps> = ({ isDark
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { alpha: true });
     if (!ctx) return;
 
     let animationFrameId: number;
-    let particles: Particle[] = [];
+    let isVisible = true;
     
-    const particleCount = isDark ? 100 : 60; 
-    // Always Gold
-    const color = '212, 175, 55'; 
+    // 1. Reduced Particle Count
+    const particleCount = isDark ? 35 : 20; 
+    const color = '212, 175, 55'; // Gold
     const baseSpeed = isDark ? 0.2 : 0.15;
+
+    // 2. Sprite Optimization (Prerender glow once)
+    const createParticleSprite = () => {
+      const sprite = document.createElement('canvas');
+      const radius = 16;
+      sprite.width = radius * 2;
+      sprite.height = radius * 2;
+      const sCtx = sprite.getContext('2d');
+      if (sCtx) {
+        const gradient = sCtx.createRadialGradient(radius, radius, 0, radius, radius, radius);
+        gradient.addColorStop(0, `rgba(${color}, 1)`);
+        gradient.addColorStop(0.3, `rgba(${color}, 0.8)`);
+        gradient.addColorStop(1, `rgba(${color}, 0)`);
+        sCtx.fillStyle = gradient;
+        sCtx.beginPath();
+        sCtx.arc(radius, radius, radius, 0, Math.PI * 2);
+        sCtx.fill();
+      }
+      return sprite;
+    };
+    
+    const spriteNode = createParticleSprite();
 
     const resize = () => {
       const dpr = window.devicePixelRatio || 1;
@@ -37,23 +59,29 @@ export const CinematicBackground: React.FC<CinematicBackgroundProps> = ({ isDark
     resize();
     window.addEventListener('resize', resize);
 
+    // 3. Tab Visibility Optimization
+    const handleVisibilityChange = () => {
+      isVisible = document.visibilityState === 'visible';
+      if (isVisible) {
+        animationFrameId = requestAnimationFrame(animate);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
     class Particle {
       x: number;
       y: number;
-      size: number;
+      size: number; // Visual scale factor
       speedX: number;
       speedY: number;
       opacity: number;
       fadeSpeed: number;
-      maxWidth: number;
-      maxHeight: number;
 
       constructor() {
-        this.maxWidth = window.innerWidth;
-        this.maxHeight = window.innerHeight;
-        this.x = Math.random() * this.maxWidth;
-        this.y = Math.random() * this.maxHeight;
-        this.size = Math.random() * 2 + 1.5; 
+        this.x = Math.random() * window.innerWidth;
+        this.y = Math.random() * window.innerHeight;
+        // Decrease base size for a subtle look
+        this.size = Math.random() * 1.5 + 0.5; 
         this.speedX = (Math.random() - 0.5) * baseSpeed; 
         this.speedY = (Math.random() - 0.5) * baseSpeed - 0.15; 
         this.opacity = Math.random() * 0.6 + 0.2; 
@@ -73,27 +101,22 @@ export const CinematicBackground: React.FC<CinematicBackgroundProps> = ({ isDark
 
       draw() {
         if (!ctx) return;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${color}, ${this.opacity})`;
-        
-        if (isDark) {
-          ctx.shadowBlur = 12;
-          ctx.shadowColor = `rgba(${color}, 0.5)`;
-        } else {
-            ctx.shadowBlur = 4;
-            ctx.shadowColor = `rgba(${color}, 0.3)`;
-        }
-        ctx.fill();
+        ctx.globalAlpha = this.opacity;
+        // Using sprite image which is inherently anti-aliased and glowy (no frame-by-frame shadowBlur)
+        const renderSize = this.size * 6; // Mult by 6 to map from visual scale to sprite radius
+        ctx.drawImage(spriteNode, this.x - renderSize/2, this.y - renderSize/2, renderSize, renderSize);
+        ctx.globalAlpha = 1.0;
       }
     }
 
-    particles = [];
+    const particles: Particle[] = [];
     for (let i = 0; i < particleCount; i++) {
       particles.push(new Particle());
     }
 
     const animate = () => {
+      if (!isVisible) return; // Stop animation loop completely if not visible
+      
       ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
       particles.forEach(p => {
         p.update();
@@ -106,6 +129,7 @@ export const CinematicBackground: React.FC<CinematicBackgroundProps> = ({ isDark
 
     return () => {
       window.removeEventListener('resize', resize);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       cancelAnimationFrame(animationFrameId);
     };
   }, [isDark]);
@@ -121,6 +145,7 @@ export const CinematicBackground: React.FC<CinematicBackgroundProps> = ({ isDark
       {isDark && (
         <div className="absolute inset-0 opacity-40 bg-[conic-gradient(from_0deg_at_50%_-20%,_transparent_45%,_rgba(212,175,55,0.15)_50%,_transparent_55%)] blur-[100px]"></div>
       )}
+      {/* 4. Canvas element will render particles purely */}
       <canvas ref={canvasRef} className="absolute inset-0 block w-full h-full" />
       <div className={`absolute inset-0 pointer-events-none transition-opacity duration-1000
         ${isDark 
