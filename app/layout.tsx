@@ -3,7 +3,6 @@ import type { Metadata } from 'next';
 import { Inter, Oswald } from 'next/font/google';
 import './globals.css';
 import { GlobalProvider } from '../context/GlobalContext';
-import { CustomCursor } from '../components/ui/CustomCursor';
 import { NoiseOverlay } from '../components/ui/NoiseOverlay';
 import { Wrapper } from '../components/Wrapper';
 import { getServerLanguage } from '@/lib/getLanguage';
@@ -47,7 +46,6 @@ export default async function RootLayout({
         <GlobalProvider initialLang={initialLang} initialHasSession={Boolean(session)}>
           {/* UI Overlays */}
           <div className="relative z-[100]">
-            <CustomCursor />
             <NoiseOverlay />
           </div>
 

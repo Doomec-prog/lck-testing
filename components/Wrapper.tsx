@@ -1,7 +1,6 @@
 'use client';
 
 import React, { ReactNode } from 'react';
-import { CinematicBackground } from './ui/CinematicBackground';
 import { LanguageWave } from './ui/LanguageWave';
 import { useGlobalContext } from '@/context/GlobalContext';
 import { Header } from './Header';
@@ -12,7 +11,6 @@ export const Wrapper = ({ children }: { children?: ReactNode }) => {
 
   return (
     <div className="relative min-h-screen w-full font-sans selection:bg-gold-500 selection:text-black overflow-x-hidden text-slate-800 dark:text-slate-200 transition-colors duration-700">
-      <CinematicBackground isDark={isDark} />
       <LanguageWave />
 
       <Header theme={theme} setTheme={setTheme} isDark={isDark} lang={lang} setLang={setLang} />
