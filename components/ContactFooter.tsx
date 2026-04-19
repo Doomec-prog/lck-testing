@@ -16,7 +16,7 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({ lang }) => {
   const t = translations[lang].footer;
   const navT = translations[lang].nav;
 
-  const darkGlassCard = "bg-white/50 dark:bg-gradient-to-br dark:from-white/5 dark:to-transparent border border-black/5 dark:border-white/10 backdrop-blur-xl shadow-xl dark:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.8)]";
+  const darkGlassCard = "bg-white/80 dark:bg-[#050505] dark:bg-gradient-to-b dark:from-white/[0.04] dark:to-transparent border border-black/5 dark:border-white/[0.08] backdrop-blur-3xl shadow-2xl dark:shadow-[0_30px_60px_-15px_rgba(0,0,0,1)] ring-1 ring-inset ring-black/5 dark:ring-white/[0.02] relative overflow-hidden";
 
   return (
     <footer id="contacts" className="relative bg-cinema-950 pt-32 pb-12 overflow-hidden">
@@ -34,8 +34,11 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({ lang }) => {
                   Вступить в Лигу Кинематографистов
                 </h2>
               </div>
-              <div className={`${darkGlassCard} p-8 md:p-12 rounded-[2.5rem]`}>
-                <p className="text-slate-600 dark:text-slate-400 mb-6 text-lg font-light leading-relaxed">
+              <div className={`${darkGlassCard} p-8 md:p-12 rounded-[2.5rem] group/card`}>
+                {/* Subtle top edge highlight */}
+                <div className="absolute inset-x-0 top-0 h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 dark:opacity-100 mix-blend-overlay"></div>
+                
+                <p className="text-slate-600 dark:text-white/80 mb-8 text-lg font-light leading-relaxed max-w-2xl">
                   Присоединяйтесь к закрытой экосистеме профессионалов кино Казахстана. Создайте профиль, находите коллег и участвуйте в развитии индустрии.
                 </p>
 
@@ -46,9 +49,9 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({ lang }) => {
                     { emoji: '🤝', text: lang === 'RU' ? 'Нетворкинг индустрии' : lang === 'KZ' ? 'Индустриялық нетворкинг' : 'Industry Networking' },
                     { emoji: '🏆', text: lang === 'RU' ? 'Закрытые мероприятия' : lang === 'KZ' ? 'Жабық іс-шаралар' : 'Exclusive Events' },
                   ].map((item, i) => (
-                    <div key={i} className="flex items-center gap-3 bg-black/5 dark:bg-white/5 rounded-xl px-4 py-3 border border-black/5 dark:border-white/5">
-                      <span className="text-xl">{item.emoji}</span>
-                      <span className="text-sm text-slate-700 dark:text-slate-300 font-medium">{item.text}</span>
+                    <div key={i} className="flex items-center gap-4 bg-white/50 dark:bg-black/60 rounded-2xl px-5 py-4 border border-black/5 dark:border-white/5 dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
+                      <span className="text-2xl drop-shadow-md">{item.emoji}</span>
+                      <span className="text-sm text-slate-800 dark:text-white/90 font-medium tracking-wide">{item.text}</span>
                     </div>
                   ))}
                 </div>
