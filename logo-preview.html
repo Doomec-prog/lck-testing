@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LCK Logo Preview — All 3 Themes</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; }
+    .theme-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 60px;
+      padding: 60px 40px;
+    }
+    .theme-label {
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .logo-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    /* Dark Theme (Gold Cinema) */
+    .theme-dark {
+      background: #050505;
+      color: #ffffff;
+    }
+    .theme-dark .theme-label { color: #D4AF37; }
+
+    /* Light Theme (Paper) */
+    .theme-light {
+      background: #F0F0EE;
+      color: #1e293b;
+    }
+    .theme-light .theme-label { color: #AA8C2C; }
+
+    /* Noir Theme (B&W) */
+    .theme-noir {
+      background: #000000;
+      color: #ffffff;
+    }
+    .theme-noir .theme-label { color: #a3a3a3; }
+
+    .separator { height: 1px; background: #333; }
+  </style>
+</head>
+<body>
+
+  <!-- DARK THEME -->
+  <div class="theme-row theme-dark">
+    <div class="logo-box">
+      <div class="theme-label">🎬 Dark (Gold Cinema)</div>
+      <div style="display:flex; gap: 40px; align-items:center;">
+        <div style="text-align:center;">
+          <p style="font-size:10px;opacity:0.5;margin-bottom:8px;">HEADER (mark)</p>
+          <svg viewBox="0 0 420 230" fill="currentColor" width="120" height="66" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <mask id="gm-dark">
+                <circle cx="115" cy="120" r="105" fill="white"/>
+                <path d="M 30 55 Q 90 100, 160 195" stroke="black" stroke-width="14" stroke-linecap="round" fill="none"/>
+                <path d="M 18 130 Q 100 85, 210 105" stroke="black" stroke-width="14" stroke-linecap="round" fill="none"/>
+                <path d="M 55 205 Q 100 115, 185 45" stroke="black" stroke-width="14" stroke-linecap="round" fill="none"/>
+              </mask>
+            </defs>
+            <circle cx="115" cy="120" r="105" fill="currentColor" mask="url(#gm-dark)"/>
+            <circle cx="275" cy="75" r="70" fill="currentColor"/>
+            <polygon points="330,45 395,70 395,135 330,105" fill="currentColor"/>
+          </svg>
+        </div>
+        <div style="text-align:center;">
+          <p style="font-size:10px;opacity:0.5;margin-bottom:8px;">FOOTER (full)</p>
+          <svg viewBox="0 0 440 390" fill="currentColor" width="110" height="97" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <mask id="gm-dark-f">
+                <circle cx="115" cy="120" r="105" fill="white"/>
+                <path d="M 30 55 Q 90 100, 160 195" stroke="black" stroke-width="14" stroke-linecap="round" fill="none"/>
+                <path d="M 18 130 Q 100 85, 210 105" stroke="black" stroke-width="14" stroke-linecap="round" fill="none"/>
+                <path d="M 55 205 Q 100 115, 185 45" stroke="black" stroke-width="14" stroke-linecap="round" fill="none"/>
+              </mask>
+            </defs>
+            <circle cx="115" cy="120" r="105" fill="currentColor" mask="url(#gm-dark-f)"/>
+            <circle cx="275" cy="75" r="70" fill="currentColor"/>
+            <polygon points="330,45 395,70 395,135 330,105" fill="currentColor"/>
+            <g transform="translate(0, 245)">
+              <path d="M 10,10 L 10,130 L 95,130 L 95,105 L 45,105 L 45,10 Z" fill="currentColor"/>
+              <path d="M 120,60 C 120,28 148,5 185,5 C 210,5 230,15 240,32 L 215,50 C 210,40 200,33 185,33 C 165,33 152,48 152,70 C 152,92 165,107 185,107 C 200,107 210,100 215,90 L 240,108 C 230,125 210,135 185,135 C 148,135 120,112 120,70 Z" fill="currentColor"/>
+              <path d="M 260,10 L 260,130 L 295,130 L 295,82 L 340,130 L 385,130 L 330,75 L 380,10 L 340,10 L 295,68 L 295,10 Z" fill="currentColor"/>
+              <polygon points="390,55 420,70 420,100 390,85" fill="currentColor"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="separator"></div>
+
+  <!-- LIGHT THEME -->
+  <div class="theme-row theme-light">
+    <div class="logo-box">
+      <div class="theme-label">☀️ Light (Paper)</div>
+      <div style="display:flex; gap: 40px; align-items:center;">
+        <div style="text-align:center;">
+          <p style="font-size:10px;opacity:0.5;margin-bottom:8px;">HEADER (mark)</p>
+          <svg viewBox="0 0 420 230" fill="currentColor" width="120" height="66" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <mask id="gm-light">
+                <circle cx="115" cy="120" r="105" fill="white"/>
+                <path d="M 30 55 Q 90 100, 160 195" stroke="black" stroke-width="14" stroke-linecap="round" fill="none"/>
+                <path d="M 18 130 Q 100 85, 210 105" stroke="black" stroke-width="14" stroke-linecap="round" fill="none"/>
+                <path d="M 55 205 Q 100 115, 185 45" stroke="black" stroke-width="14" stroke-linecap="round" fill="none"/>
+              </mask>
+            </defs>
+            <circle cx="115" cy="120" r="105" fill="currentColor" mask="url(#gm-light)"/>
+            <circle cx="275" cy="75" r="70" fill="currentColor"/>
+            <polygon points="330,45 395,70 395,135 330,105" fill="currentColor"/>
+          </svg>
+        </div>
+        <div style="text-align:center;">
+          <p style="font-size:10px;opacity:0.5;margin-bottom:8px;">FOOTER (full)</p>
+          <svg viewBox="0 0 440 390" fill="currentColor" width="110" height="97" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <mask id="gm-light-f">
+                <circle cx="115" cy="120" r="105" fill="white"/>
+                <path d="M 30 55 Q 90 100, 160 195" stroke="black" stroke-width="14" stroke-linecap="round" fill="none"/>
+                <path d="M 18 130 Q 100 85, 210 105" stroke="black" stroke-width="14" stroke-linecap="round" fill="none"/>
+                <path d="M 55 205 Q 100 115, 185 45" stroke="black" stroke-width="14" stroke-linecap="round" fill="none"/>
+              </mask>
+            </defs>
+            <circle cx="115" cy="120" r="105" fill="currentColor" mask="url(#gm-light-f)"/>
+            <circle cx="275" cy="75" r="70" fill="currentColor"/>
+            <polygon points="330,45 395,70 395,135 330,105" fill="currentColor"/>
+            <g transform="translate(0, 245)">
+              <path d="M 10,10 L 10,130 L 95,130 L 95,105 L 45,105 L 45,10 Z" fill="currentColor"/>
+              <path d="M 120,60 C 120,28 148,5 185,5 C 210,5 230,15 240,32 L 215,50 C 210,40 200,33 185,33 C 165,33 152,48 152,70 C 152,92 165,107 185,107 C 200,107 210,100 215,90 L 240,108 C 230,125 210,135 185,135 C 148,135 120,112 120,70 Z" fill="currentColor"/>
+              <path d="M 260,10 L 260,130 L 295,130 L 295,82 L 340,130 L 385,130 L 330,75 L 380,10 L 340,10 L 295,68 L 295,10 Z" fill="currentColor"/>
+              <polygon points="390,55 420,70 420,100 390,85" fill="currentColor"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="separator"></div>
+
+  <!-- NOIR THEME -->
+  <div class="theme-row theme-noir">
+    <div class="logo-box">
+      <div class="theme-label">🎞️ Noir (B&W)</div>
+      <div style="display:flex; gap: 40px; align-items:center;">
+        <div style="text-align:center;">
+          <p style="font-size:10px;opacity:0.5;margin-bottom:8px;">HEADER (mark)</p>
+          <svg viewBox="0 0 420 230" fill="currentColor" width="120" height="66" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <mask id="gm-noir">
+                <circle cx="115" cy="120" r="105" fill="white"/>
+                <path d="M 30 55 Q 90 100, 160 195" stroke="black" stroke-width="14" stroke-linecap="round" fill="none"/>
+                <path d="M 18 130 Q 100 85, 210 105" stroke="black" stroke-width="14" stroke-linecap="round" fill="none"/>
+                <path d="M 55 205 Q 100 115, 185 45" stroke="black" stroke-width="14" stroke-linecap="round" fill="none"/>
+              </mask>
+            </defs>
+            <circle cx="115" cy="120" r="105" fill="currentColor" mask="url(#gm-noir)"/>
+            <circle cx="275" cy="75" r="70" fill="currentColor"/>
+            <polygon points="330,45 395,70 395,135 330,105" fill="currentColor"/>
+          </svg>
+        </div>
+        <div style="text-align:center;">
+          <p style="font-size:10px;opacity:0.5;margin-bottom:8px;">FOOTER (full)</p>
+          <svg viewBox="0 0 440 390" fill="currentColor" width="110" height="97" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <mask id="gm-noir-f">
+                <circle cx="115" cy="120" r="105" fill="white"/>
+                <path d="M 30 55 Q 90 100, 160 195" stroke="black" stroke-width="14" stroke-linecap="round" fill="none"/>
+                <path d="M 18 130 Q 100 85, 210 105" stroke="black" stroke-width="14" stroke-linecap="round" fill="none"/>
+                <path d="M 55 205 Q 100 115, 185 45" stroke="black" stroke-width="14" stroke-linecap="round" fill="none"/>
+              </mask>
+            </defs>
+            <circle cx="115" cy="120" r="105" fill="currentColor" mask="url(#gm-noir-f)"/>
+            <circle cx="275" cy="75" r="70" fill="currentColor"/>
+            <polygon points="330,45 395,70 395,135 330,105" fill="currentColor"/>
+            <g transform="translate(0, 245)">
+              <path d="M 10,10 L 10,130 L 95,130 L 95,105 L 45,105 L 45,10 Z" fill="currentColor"/>
+              <path d="M 120,60 C 120,28 148,5 185,5 C 210,5 230,15 240,32 L 215,50 C 210,40 200,33 185,33 C 165,33 152,48 152,70 C 152,92 165,107 185,107 C 200,107 210,100 215,90 L 240,108 C 230,125 210,135 185,135 C 148,135 120,112 120,70 Z" fill="currentColor"/>
+              <path d="M 260,10 L 260,130 L 295,130 L 295,82 L 340,130 L 385,130 L 330,75 L 380,10 L 340,10 L 295,68 L 295,10 Z" fill="currentColor"/>
+              <polygon points="390,55 420,70 420,100 390,85" fill="currentColor"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import { LckLogo } from './ui/LckLogo';
 import { FadeIn } from './ui/FadeIn';
 import { Language } from '@/types';
 import { translations } from '@/lib/translations';
@@ -74,9 +75,8 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({ lang }) => {
             <div className="flex flex-col md:flex-row items-center justify-between gap-6 max-w-6xl mx-auto">
               {/* Brand Identity */}
               <div className="flex items-center gap-4">
-                <span className="text-2xl font-display font-bold tracking-tighter uppercase">
-                  <span className="text-white">LCK</span>
-                  <span className="text-gold-500">.KZ</span>
+                <span className="text-white">
+                  <LckLogo variant="mark" height={28} />
                 </span>
                 <div className="hidden md:block w-px h-8 bg-white/10" />
                 <span className="hidden md:block text-white/40 text-xs font-medium uppercase tracking-widest">

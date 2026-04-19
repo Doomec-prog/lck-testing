@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Fragment, useRef } from 'react';
 import { Menu, X, Sun, Moon, LogIn, LogOut, Monitor, ChevronDown } from 'lucide-react';
+import { LckLogo } from './ui/LckLogo';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { NavItem, Language, Theme } from '@/types';
@@ -95,10 +96,14 @@ export const Header = ({ theme, setTheme, isDark, lang, setLang }: HeaderProps) 
     <header className={`fixed top-4 left-0 w-full z-50 transition-all duration-500 flex justify-center pointer-events-none`}>
       <div className={`container mx-auto px-4 lg:px-6 flex justify-between items-center transition-all duration-500 pointer-events-auto ${isScrolled ? 'max-w-7xl' : 'max-w-full'}`}>
 
-        <div className={`glass-panel px-6 py-3 rounded-full flex items-center space-x-2 z-50 shrink-0 transition-all duration-500 ${isScrolled ? 'bg-opacity-90' : 'bg-opacity-40'}`}>
-          <Link href="/" className="text-2xl font-display font-bold tracking-tighter uppercase group flex items-center">
-            <span className="text-slate-900 dark:text-white group-hover:text-gold-500 transition-colors drop-shadow-sm">LCK</span>
-            <span className="text-gold-500 group-hover:text-white transition-colors drop-shadow-sm">.KZ</span>
+        <div className={`px-4 py-2 rounded-full flex items-center z-50 shrink-0 transition-all duration-500 
+          ${isDark 
+            ? 'bg-black border border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.5)]' 
+            : `glass-panel ${isScrolled ? 'bg-opacity-90' : 'bg-opacity-40'}`
+          }
+        `}>
+          <Link href="/" className="flex items-center group text-slate-900 dark:text-white hover:text-gold-500 transition-colors">
+            <LckLogo variant="mark" height={32} />
           </Link>
         </div>
 
@@ -184,10 +189,9 @@ export const Header = ({ theme, setTheme, isDark, lang, setLang }: HeaderProps) 
         {isMobileMenuOpen && (
           <div className="fixed inset-0 bg-paper-100 dark:bg-black z-40 flex flex-col items-center justify-center space-y-8 animate-fadeIn p-4 overflow-y-auto pointer-events-auto">
             <div className="w-full flex justify-center mb-8">
-              <div className="glass-panel px-6 py-2 rounded-full flex items-center space-x-2">
-                <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-display font-bold tracking-tighter uppercase flex items-center">
-                  <span className="text-slate-900 dark:text-white">LCK</span>
-                  <span className="text-gold-500">.KZ</span>
+              <div className={`px-6 py-3 rounded-full flex items-center ${isDark ? 'bg-black border border-white/10 shadow-lg' : 'glass-panel'}`}>
+                <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center text-slate-900 dark:text-white">
+                  <LckLogo variant="mark" height={36} />
                 </Link>
               </div>
             </div>
