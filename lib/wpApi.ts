@@ -101,7 +101,8 @@ class WPApiService {
 
   async getProjects(lang: Language, perPage = 10): Promise<NewsItem[]> {
     try {
-      const posts = await this.fetch<WPPost[]>('rt-portfolios', { per_page: perPage });
+      // rt-portfolios no longer exists, returning empty or could be changed to fetch posts
+      return [];
       return posts.map(p => normalizePost(p, lang));
     } catch (e) {
       return [];
@@ -126,12 +127,8 @@ class WPApiService {
 
   async getPostBySlug(slug: string, lang: Language = 'RU'): Promise<{ post: NewsItem; content: string; image: string } | null> {
     try {
-      // Try posts first
-      let posts = await this.fetch<WPPost[]>('posts', { slug });
-      // Fallback to rt-portfolios (custom post type used for news)
-      if (!posts || posts.length === 0) {
-        posts = await this.fetch<WPPost[]>('rt-portfolios', { slug });
-      }
+      // Fetch from posts only
+      const posts = await this.fetch<WPPost[]>('posts', { slug });
       if (!posts || posts.length === 0) return null;
       const raw = posts[0];
       const normalized = normalizePost(raw, lang);
