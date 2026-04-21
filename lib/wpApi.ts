@@ -100,13 +100,8 @@ class WPApiService {
   }
 
   async getProjects(lang: Language, perPage = 10): Promise<NewsItem[]> {
-    try {
-      // rt-portfolios no longer exists, returning empty or could be changed to fetch posts
-      return [];
-      return posts.map(p => normalizePost(p, lang));
-    } catch (e) {
-      return [];
-    }
+    // rt-portfolios no longer exists, returning empty
+    return [];
   }
 
   async getAuthors(perPage = 100): Promise<WPAuthor[]> {
