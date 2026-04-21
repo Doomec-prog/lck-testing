@@ -100,12 +100,8 @@ class WPApiService {
   }
 
   async getProjects(lang: Language, perPage = 10): Promise<NewsItem[]> {
-    try {
-      const posts = await this.fetch<WPPost[]>('rt-portfolios', { per_page: perPage });
-      return posts.map(p => normalizePost(p, lang));
-    } catch (e) {
-      return [];
-    }
+    // rt-portfolios no longer exists, returning empty
+    return [];
   }
 
   async getAuthors(perPage = 100): Promise<WPAuthor[]> {
@@ -126,13 +122,19 @@ class WPApiService {
 
   async getPostBySlug(slug: string, lang: Language = 'RU'): Promise<{ post: NewsItem; content: string; image: string } | null> {
     try {
-      // Try posts first
-      let posts = await this.fetch<WPPost[]>('posts', { slug });
-      // Fallback to rt-portfolios (custom post type used for news)
+      console.log(`[WP API getPostBySlug] Input slug: "${slug}", type: ${typeof slug}`);
+      const endpointUrl = this.getEndpoint('posts', { slug });
+      console.log(`[WP API getPostBySlug] Fetching endpoint URL: ${endpointUrl}`);
+
+      // Fetch from posts only
+      const posts = await this.fetch<WPPost[]>('posts', { slug });
+      
+      console.log(`[WP API getPostBySlug] Response received for slug "${slug}". Is array: ${Array.isArray(posts)}, length: ${posts?.length}`);
+
       if (!posts || posts.length === 0) {
-        posts = await this.fetch<WPPost[]>('rt-portfolios', { slug });
+        console.log(`[WP API getPostBySlug] Post list is empty. Returning null...`);
+        return null;
       }
-      if (!posts || posts.length === 0) return null;
       const raw = posts[0];
       const normalized = normalizePost(raw, lang);
       // Sanitize content URLs

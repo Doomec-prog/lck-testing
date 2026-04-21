@@ -8,12 +8,13 @@ import { getServerLanguage } from '@/lib/getLanguage';
 export const dynamic = 'force-dynamic';
 
 interface PageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 export default async function NewsPostPage({ params }: PageProps) {
+  const resolvedParams = await params;
   const lang = await getServerLanguage();
-  const result = await wpApi.getPostBySlug(params.slug, lang);
+  const result = await wpApi.getPostBySlug(resolvedParams.slug, lang);
 
   if (!result) {
     notFound();
