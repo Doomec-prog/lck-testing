@@ -122,9 +122,19 @@ class WPApiService {
 
   async getPostBySlug(slug: string, lang: Language = 'RU'): Promise<{ post: NewsItem; content: string; image: string } | null> {
     try {
+      console.log(`[WP API getPostBySlug] Input slug: "${slug}", type: ${typeof slug}`);
+      const endpointUrl = this.getEndpoint('posts', { slug });
+      console.log(`[WP API getPostBySlug] Fetching endpoint URL: ${endpointUrl}`);
+
       // Fetch from posts only
       const posts = await this.fetch<WPPost[]>('posts', { slug });
-      if (!posts || posts.length === 0) return null;
+      
+      console.log(`[WP API getPostBySlug] Response received for slug "${slug}". Is array: ${Array.isArray(posts)}, length: ${posts?.length}`);
+
+      if (!posts || posts.length === 0) {
+        console.log(`[WP API getPostBySlug] Post list is empty. Returning null...`);
+        return null;
+      }
       const raw = posts[0];
       const normalized = normalizePost(raw, lang);
       // Sanitize content URLs
