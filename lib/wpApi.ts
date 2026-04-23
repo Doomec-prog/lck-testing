@@ -1,6 +1,6 @@
 import 'server-only';
 
-import DOMPurify from 'isomorphic-dompurify';
+import sanitizeHtmlLib from 'sanitize-html';
 import { marked } from 'marked';
 import { WPPost, NewsItem, Language, WPAuthor } from '@/types';
 
@@ -38,9 +38,26 @@ const extractImageFromContent = (htmlContent: string): string | null => {
 };
 
 const sanitizeHtml = (html: string): string => {
-  return DOMPurify.sanitize(html, {
-    USE_PROFILES: { html: true },
-    FORBID_TAGS: ['style', 'script'],
+  return sanitizeHtmlLib(html, {
+    allowedTags: [
+      'p', 'br', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+      'strong', 'em', 'b', 'i', 'u', 's',
+      'ul', 'ol', 'li', 'blockquote', 'code', 'pre', 'hr',
+      'a', 'img', 'figure', 'figcaption', 'span', 'div'
+    ],
+    allowedAttributes: {
+      a: ['href', 'name', 'target', 'rel'],
+      img: ['src', 'alt', 'title', 'width', 'height', 'loading', 'decoding'],
+      '*': ['class', 'id'],
+    },
+    allowedSchemes: ['http', 'https', 'mailto', 'tel'],
+    allowProtocolRelative: false,
+    transformTags: {
+      a: sanitizeHtmlLib.simpleTransform('a', {
+        rel: 'noopener noreferrer nofollow',
+        target: '_blank',
+      }),
+    },
   });
 };
 
