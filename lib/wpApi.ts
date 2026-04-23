@@ -1,5 +1,7 @@
 import 'server-only';
 
+import DOMPurify from 'isomorphic-dompurify';
+import { marked } from 'marked';
 import { WPPost, NewsItem, Language, WPAuthor } from '@/types';
 
 const WP_API_BASE = 'https://back.lck.kz/wp-json/wp/v2';
@@ -35,39 +37,11 @@ const extractImageFromContent = (htmlContent: string): string | null => {
   return match?.[1] ?? null;
 };
 
-const markdownToHtml = (markdown: string): string => {
-  const normalized = markdown
-    .replace(/\\r\\n/g, '\n')
-    .replace(/\\n/g, '\n')
-    .replace(/\\t/g, '\t');
-
-  const withImages = normalized.replace(
-    /!\[([^\]]*)\]\((https?:\/\/[^\s)]+)\)/g,
-    '<img src="$2" alt="$1" />'
-  );
-
-  const withLinks = withImages.replace(
-    /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
-    '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>'
-  );
-
-  const withHeadings = withLinks
-    .replace(/^###\s+(.+)$/gm, '<h3>$1</h3>')
-    .replace(/^##\s+(.+)$/gm, '<h2>$1</h2>')
-    .replace(/^#\s+(.+)$/gm, '<h1>$1</h1>');
-
-  const paragraphs = withHeadings
-    .split(/\n{2,}/)
-    .map(block => block.trim())
-    .filter(Boolean)
-    .map(block => {
-      if (/^<h[1-3]>|^<img|^<ul>|^<ol>|^<blockquote>/.test(block)) {
-        return block;
-      }
-      return `<p>${block.replace(/\n/g, '<br />')}</p>`;
-    });
-
-  return paragraphs.join('\n');
+const sanitizeHtml = (html: string): string => {
+  return DOMPurify.sanitize(html, {
+    USE_PROFILES: { html: true },
+    FORBID_TAGS: ['style', 'script'],
+  });
 };
 
 const normalizePostContent = (content: string): string => {
@@ -79,23 +53,21 @@ const normalizePostContent = (content: string): string => {
 
   const unescaped = fixedUrls
     .replace(/\\\\/g, '\\')
-    .replace(/\\([\[\]()`*_#+!\\])/g, '$1');
+    .replace(/\\r\\n/g, '\n')
+    .replace(/\\n/g, '\n')
+    .replace(/\\t/g, '\t')
+    .trim();
 
   const hasHtmlTags = /<\/?[a-z][\s\S]*>/i.test(unescaped);
-  if (hasHtmlTags) {
-    return unescaped;
-  }
+  const renderedHtml = hasHtmlTags
+    ? unescaped
+    : marked.parse(unescaped, { breaks: true, gfm: true });
 
-  const looksLikeMarkdown = /\[[^\]]+\]\(https?:\/\//.test(unescaped) || /!\[[^\]]*\]\(https?:\/\//.test(unescaped) || /^#{1,3}\s+/m.test(unescaped);
-  if (looksLikeMarkdown) {
-    return markdownToHtml(unescaped);
-  }
-
-  return `<p>${unescaped.replace(/\n/g, '<br />')}</p>`;
+  return sanitizeHtml(String(renderedHtml));
 };
 
 const normalizePost = (post: WPPost, lang: Language): NewsItem => {
-  const cleanTitle = decodeHtml(post.title.rendered.replace(/(<([^>]+)>)/gi, ""));
+  const cleanTitle = decodeHtml(post.title.rendered.replace(/(<([^>]+)>)/gi, ''));
 
   let imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
   if (!imageUrl && post.content?.rendered) {
@@ -113,7 +85,7 @@ const normalizePost = (post: WPPost, lang: Language): NewsItem => {
     date: new Date(post.date).toLocaleDateString(lang === 'EN' ? 'en-US' : 'ru-RU', {
       day: 'numeric', month: 'long', year: 'numeric'
     }),
-    excerpt: post.excerpt?.rendered ? decodeHtml(post.excerpt.rendered.replace(/(<([^>]+)>)/gi, "")) : undefined
+    excerpt: post.excerpt?.rendered ? decodeHtml(post.excerpt.rendered.replace(/(<([^>]+)>)/gi, '')) : undefined
   };
 };
 
@@ -230,8 +202,11 @@ class WPApiService {
       if (pages && pages.length > 0) {
         const page = pages[0];
         if (page.content && page.content.rendered) {
-           page.content.rendered = page.content.rendered.replace(/http:\/\/lck\.kz/g, 'https://lck.kz');
-           page.content.rendered = page.content.rendered.replace(/http:\/\/back\.lck\.kz/g, 'https://back.lck.kz');
+          page.content.rendered = sanitizeHtml(
+            page.content.rendered
+              .replace(/http:\/\/lck\.kz/g, 'https://lck.kz')
+              .replace(/http:\/\/back\.lck\.kz/g, 'https://back.lck.kz')
+          );
         }
         return page;
       }

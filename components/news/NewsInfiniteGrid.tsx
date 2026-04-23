@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { FadeIn } from '@/components/ui/FadeIn';
@@ -56,8 +57,8 @@ export function NewsInfiniteGrid({ lang, initialPosts, initialHasMore, perPage }
       });
       setPage(data.page);
       setHasMore(data.hasMore);
-    } catch (err) {
-      setError(lang === 'RU' ? 'Не удалось загрузить больше новостей.' : lang === 'KZ' ? 'Қосымша жаңалықтарды жүктеу мүмкін болмады.' : 'Failed to load more news.');
+    } catch {
+      setError(translations[lang].news.loadMoreError);
     } finally {
       setIsLoading(false);
     }
@@ -102,7 +103,13 @@ export function NewsInfiniteGrid({ lang, initialPosts, initialHasMore, perPage }
               <Link href={item.link} className="flex flex-col h-full">
                 <div className="overflow-hidden aspect-video relative rounded-t-2xl">
                   <div className="absolute inset-0 bg-cinema-950/20 group-hover:bg-transparent transition-colors z-10"></div>
-                  <img src={item.image} alt={item.title} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 grayscale group-hover:grayscale-0" />
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw"
+                    className="object-cover transform group-hover:scale-110 transition-transform duration-700 grayscale group-hover:grayscale-0"
+                  />
                 </div>
                 <div className="p-6 flex flex-col flex-grow bg-white/40 dark:bg-white/5 group-hover:bg-white/60 dark:group-hover:bg-white/10 transition-colors rounded-b-2xl">
                   {item.date && (
@@ -139,9 +146,7 @@ export function NewsInfiniteGrid({ lang, initialPosts, initialHasMore, perPage }
                 disabled={isLoading}
                 className="px-6 py-3 rounded-full border border-white/20 text-sm font-semibold uppercase tracking-wider text-white hover:border-gold-500/50 hover:text-gold-400 transition-colors disabled:opacity-50"
               >
-                {isLoading
-                  ? (lang === 'RU' ? 'Загрузка...' : lang === 'KZ' ? 'Жүктеу...' : 'Loading...')
-                  : (lang === 'RU' ? 'Показать еще' : lang === 'KZ' ? 'Тағы көрсету' : 'Load more')}
+                {isLoading ? translations[lang].news.loadingMore : translations[lang].news.loadMoreBtn}
               </button>
             </div>
           )}
