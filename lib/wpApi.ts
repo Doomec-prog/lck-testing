@@ -1,5 +1,7 @@
 import 'server-only';
 
+import sanitizeHtmlLib from 'sanitize-html';
+import { marked } from 'marked';
 import { WPPost, NewsItem, Language, WPAuthor } from '@/types';
 
 const WP_API_BASE = 'https://back.lck.kz/wp-json/wp/v2';
@@ -35,16 +37,62 @@ const extractImageFromContent = (htmlContent: string): string | null => {
   return match?.[1] ?? null;
 };
 
+const sanitizeHtml = (html: string): string => {
+  return sanitizeHtmlLib(html, {
+    allowedTags: [
+      'p', 'br', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+      'strong', 'em', 'b', 'i', 'u', 's',
+      'ul', 'ol', 'li', 'blockquote', 'code', 'pre', 'hr',
+      'a', 'img', 'figure', 'figcaption', 'span', 'div'
+    ],
+    allowedAttributes: {
+      a: ['href', 'name', 'target', 'rel'],
+      img: ['src', 'alt', 'title', 'width', 'height', 'loading', 'decoding'],
+      '*': ['class', 'id'],
+    },
+    allowedSchemes: ['http', 'https', 'mailto', 'tel'],
+    allowProtocolRelative: false,
+    transformTags: {
+      a: sanitizeHtmlLib.simpleTransform('a', {
+        rel: 'noopener noreferrer nofollow',
+        target: '_blank',
+      }),
+    },
+  });
+};
+
+const normalizePostContent = (content: string): string => {
+  if (!content) return '';
+
+  const fixedUrls = content
+    .replace(/http:\/\/lck\.kz/g, 'https://lck.kz')
+    .replace(/http:\/\/back\.lck\.kz/g, 'https://back.lck.kz');
+
+  const unescaped = fixedUrls
+    .replace(/\\\\/g, '\\')
+    .replace(/\\r\\n/g, '\n')
+    .replace(/\\n/g, '\n')
+    .replace(/\\t/g, '\t')
+    .trim();
+
+  const hasHtmlTags = /<\/?[a-z][\s\S]*>/i.test(unescaped);
+  const renderedHtml = hasHtmlTags
+    ? unescaped
+    : marked.parse(unescaped, { breaks: true, gfm: true });
+
+  return sanitizeHtml(String(renderedHtml));
+};
+
 const normalizePost = (post: WPPost, lang: Language): NewsItem => {
-  const cleanTitle = decodeHtml(post.title.rendered.replace(/(<([^>]+)>)/gi, ""));
-  
+  const cleanTitle = decodeHtml(post.title.rendered.replace(/(<([^>]+)>)/gi, ''));
+
   let imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
   if (!imageUrl && post.content?.rendered) {
     imageUrl = extractImageFromContent(post.content.rendered) || '';
   }
 
   const secureImage = forceHttps(imageUrl);
-  
+
   return {
     id: post.id,
     title: cleanTitle,
@@ -54,7 +102,7 @@ const normalizePost = (post: WPPost, lang: Language): NewsItem => {
     date: new Date(post.date).toLocaleDateString(lang === 'EN' ? 'en-US' : 'ru-RU', {
       day: 'numeric', month: 'long', year: 'numeric'
     }),
-    excerpt: post.excerpt?.rendered ? decodeHtml(post.excerpt.rendered.replace(/(<([^>]+)>)/gi, "")) : undefined
+    excerpt: post.excerpt?.rendered ? decodeHtml(post.excerpt.rendered.replace(/(<([^>]+)>)/gi, '')) : undefined
   };
 };
 
@@ -69,22 +117,45 @@ class WPApiService {
   }
 
   private async fetch<T>(path: string, params: Record<string, string | number> = {}): Promise<T> {
+    const response = await fetch(this.getEndpoint(path, params), {
+      next: { revalidate: 3600 },
+    });
+
+    if (!response.ok) {
+      throw new Error(`WP API Error: ${response.statusText}`);
+    }
+
+    return await response.json();
+  }
+
+  async getNewsPage(lang: Language, page = 1, perPage = 12): Promise<{ items: NewsItem[]; hasMore: boolean; totalPages: number }> {
     try {
-      const response = await fetch(this.getEndpoint(path, params), {
+      const response = await fetch(this.getEndpoint('posts', { per_page: perPage, page }), {
         next: { revalidate: 3600 },
       });
-      if (!response.ok) throw new Error(`WP API Error: ${response.statusText}`);
-      return await response.json();
-    } catch (error) {
-      console.error(`Failed to fetch ${path}:`, error);
-      throw error;
+
+      if (!response.ok) {
+        throw new Error(`WP API Error: ${response.statusText}`);
+      }
+
+      const posts = await response.json() as WPPost[];
+      const totalPages = Number(response.headers.get('X-WP-TotalPages') || '1');
+
+      return {
+        items: posts.map(p => normalizePost(p, lang)),
+        hasMore: page < totalPages,
+        totalPages,
+      };
+    } catch (e) {
+      console.error(`Failed to fetch paginated news page ${page}:`, e);
+      return { items: [], hasMore: false, totalPages: 1 };
     }
   }
 
   async getPosts(lang: Language, perPage = 4): Promise<NewsItem[]> {
     try {
-      const posts = await this.fetch<WPPost[]>('posts', { per_page: perPage });
-      return posts.map(p => normalizePost(p, lang));
+      const { items } = await this.getNewsPage(lang, 1, perPage);
+      return items;
     } catch (e) {
       return [];
     }
@@ -92,15 +163,14 @@ class WPApiService {
 
   async getNews(lang: Language, perPage = 4): Promise<NewsItem[]> {
     try {
-      const posts = await this.fetch<WPPost[]>('posts', { per_page: perPage });
-      return posts.map(p => normalizePost(p, lang));
+      const { items } = await this.getNewsPage(lang, 1, perPage);
+      return items;
     } catch (e) {
       return [];
     }
   }
 
   async getProjects(lang: Language, perPage = 10): Promise<NewsItem[]> {
-    // rt-portfolios no longer exists, returning empty
     return [];
   }
 
@@ -122,25 +192,16 @@ class WPApiService {
 
   async getPostBySlug(slug: string, lang: Language = 'RU'): Promise<{ post: NewsItem; content: string; image: string } | null> {
     try {
-      console.log(`[WP API getPostBySlug] Input slug: "${slug}", type: ${typeof slug}`);
-      const endpointUrl = this.getEndpoint('posts', { slug });
-      console.log(`[WP API getPostBySlug] Fetching endpoint URL: ${endpointUrl}`);
-
-      // Fetch from posts only
       const posts = await this.fetch<WPPost[]>('posts', { slug });
-      
-      console.log(`[WP API getPostBySlug] Response received for slug "${slug}". Is array: ${Array.isArray(posts)}, length: ${posts?.length}`);
 
       if (!posts || posts.length === 0) {
-        console.log(`[WP API getPostBySlug] Post list is empty. Returning null...`);
         return null;
       }
+
       const raw = posts[0];
       const normalized = normalizePost(raw, lang);
-      // Sanitize content URLs
-      let content = raw.content?.rendered || '';
-      content = content.replace(/http:\/\/lck\.kz/g, 'https://lck.kz');
-      content = content.replace(/http:\/\/back\.lck\.kz/g, 'https://back.lck.kz');
+      const content = normalizePostContent(raw.content?.rendered || '');
+
       return {
         post: normalized,
         content,
@@ -158,8 +219,11 @@ class WPApiService {
       if (pages && pages.length > 0) {
         const page = pages[0];
         if (page.content && page.content.rendered) {
-           page.content.rendered = page.content.rendered.replace(/http:\/\/lck\.kz/g, 'https://lck.kz');
-           page.content.rendered = page.content.rendered.replace(/http:\/\/back\.lck\.kz/g, 'https://back.lck.kz');
+          page.content.rendered = sanitizeHtml(
+            page.content.rendered
+              .replace(/http:\/\/lck\.kz/g, 'https://lck.kz')
+              .replace(/http:\/\/back\.lck\.kz/g, 'https://back.lck.kz')
+          );
         }
         return page;
       }

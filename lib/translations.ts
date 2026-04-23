@@ -124,6 +124,9 @@ export const translations = {
       desc: 'Держим вас в курсе последних событий в жизни казахстанского и мирового кинематографа.',
       moreBtn: 'Больше новостей',
       readBtn: 'Читать',
+      loadMoreBtn: 'Показать еще',
+      loadingMore: 'Загрузка...',
+      loadMoreError: 'Не удалось загрузить больше новостей.',
       items: [
         { title: "Фильм «Почтальон Победы» под Минском снимают кинематографисты из Беларуси, Казахстана и России" },
         { title: "Битва форматов вертикаль VS кино: между трендом и искусством" },
@@ -297,6 +300,9 @@ export const translations = {
       desc: 'Біз сізді қазақстандық және әлемдік кинематография өміріндегі соңғы оқиғалардан хабардар етіп отырамыз.',
       moreBtn: 'Көбірек жаңалық',
       readBtn: 'Оқу',
+      loadMoreBtn: 'Тағы көрсету',
+      loadingMore: 'Жүктеу...',
+      loadMoreError: 'Қосымша жаңалықтарды жүктеу мүмкін болмады.',
       items: [
         { title: "Минск түбінде «Жеңіс пошташысы» фильмін Беларусь, Қазақстан және Ресей кинематографистері түсіруде" },
         { title: "Форматтар шайқасы вертикаль VS кино: тренд пен өнер арасында" },
@@ -470,6 +476,9 @@ export const translations = {
       desc: 'We keep you informed of the latest events in the life of Kazakhstani and world cinema.',
       moreBtn: 'More News',
       readBtn: 'Read',
+      loadMoreBtn: 'Load more',
+      loadingMore: 'Loading...',
+      loadMoreError: 'Failed to load more news.',
       items: [
         { title: "Filmmakers from Belarus, Kazakhstan, and Russia are shooting the movie 'Postman of Victory' near Minsk" },
         { title: "Battle of formats Vertical VS Cinema: between trend and art" },
