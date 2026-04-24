@@ -32,3 +32,13 @@ ts-debug.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local debug / data dumps
+tmp_news.json
+embedded_debug.txt
+content.txt
+content_imgs.txt
+featured.txt
+post_ids.txt
+test.json
+logo-preview.html
